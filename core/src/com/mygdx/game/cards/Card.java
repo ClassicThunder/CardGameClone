@@ -8,10 +8,13 @@ import com.mygdx.game.hand.Hand;
 
 public class Card {
 
-    private final Sprite backingSprite;
     private final PolygonSprite polygon;
 
     private boolean isHover = false;
+
+    private Vector2 restingLocation = new Vector2();
+    private Vector2 restingSize = new Vector2();
+    private float restingRotation = 0.0f;
 
     public Card(Texture img) {
 
@@ -26,15 +29,22 @@ public class Card {
         PolygonRegion polyRegion = new PolygonRegion(textureRegion, verts, tris);
 
         this.polygon = new PolygonSprite(polyRegion);
-
-        this.backingSprite = new Sprite(img);
     }
 
-    public void Update() {
+    public void Reset() {
 
         this.isHover = false;
     }
 
+    // Figure out where things should go
+    public void SetRestingPosition(Vector2 location, float rotation, Vector2 size) {
+
+        this.restingLocation = location;
+        this.restingRotation = rotation;
+        this.restingSize = size;
+    }
+
+    // Mouse Detection
     public boolean ContainsMouse(final Vector2 mouseLocation) {
 
         final float[] vertices = this.polygon.getVertices();
@@ -63,31 +73,22 @@ public class Card {
         return oddNodes;
     }
 
-    public void Draw(PolygonSpriteBatch batch, final Vector2 location, final Vector2 size, final float rotation) {
+    // Update
+    public void Update() {
 
-        polygon.setOrigin(
-                size.x / 2f,
-                size.y / 2f);
-        polygon.setSize(size.x, size.y);
-
-        if (isHover) {
-            polygon.setRotation(rotation + 180);
-        } else {
-            polygon.setRotation(rotation);
-        }
-
-        polygon.setPosition(
-                location.x - size.x / 2f,
-                location.y - size.y / 2f);
-        polygon.draw(batch);
+        polygon.setOrigin(restingSize.x / 2f, restingSize.y / 2f);
+        polygon.setSize(restingSize.x, restingSize.y);
+        polygon.setRotation(restingRotation);
+        polygon.setPosition(restingLocation.x - restingSize.x / 2f, restingLocation.y - restingSize.y / 2f);
     }
 
-    public void Draw(SpriteBatch batch, final Vector2 location, final Vector2 size, final float rotation) {
+    // Draw
+    public void Draw(PolygonSpriteBatch batch) {
 
-        backingSprite.setOriginCenter();
-        backingSprite.setSize(size.x, size.y);
-        backingSprite.setRotation(rotation);
-        backingSprite.setOriginBasedPosition(location.x, location.y);
-        backingSprite.draw(batch);
+        if (isHover) {
+            polygon.draw(batch, 0.2f);
+        } else {
+            polygon.draw(batch);
+        }
     }
 }

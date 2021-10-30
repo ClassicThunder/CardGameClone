@@ -9,13 +9,15 @@ import java.util.List;
 
 public class CardBezier {
 
-    private final Vector2 reuse = new Vector2();
+    private final Vector2 cardSize;
 
     private final float centerX;
     private final float paddedLeft;
     private final float paddedRight;
 
     public CardBezier(Rectangle area, Vector2 cardSize) {
+
+        this.cardSize = cardSize;
 
         centerX = area.x + (area.width / 2);
 
@@ -25,7 +27,7 @@ public class CardBezier {
         paddedRight = centerX + (width / 2f);
     }
 
-    public void LayoutCards(List<Card> cardsInHand) {
+    public void FindRestingPosition(List<Card> cardsInHand) {
 
         float cardCount = (float)(cardsInHand.size() - 1);
 
@@ -33,13 +35,13 @@ public class CardBezier {
 
             float pct = (float)x / cardCount;
 
-            Vector2 location = Bezier.quadratic(reuse, pct,
+            Vector2 location = Bezier.quadratic(new Vector2(), pct,
                     new Vector2(paddedLeft, 0),
                     new Vector2(centerX , 100f),
                     new Vector2(paddedRight, 0),
                     new Vector2());
 
-            float maxY = Bezier.quadratic(reuse, 0.5f,
+            float maxY = Bezier.quadratic(new Vector2(), 0.5f,
                     new Vector2(paddedLeft, 0),
                     new Vector2(centerX , 100f),
                     new Vector2(paddedRight, 0),
@@ -51,7 +53,7 @@ public class CardBezier {
                 rotation *= -1f;
             }
 
-//            cardsInHand.get(x).Update();
+            cardsInHand.get(x).SetRestingPosition(location, rotation, cardSize);
         }
     }
 }
