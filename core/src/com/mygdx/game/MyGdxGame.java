@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.cards.Card;
-import com.mygdx.game.cards.texture.TextureFactory;
+import com.mygdx.game.texture.TextureFactory;
 import com.mygdx.game.hand.Hand;
 import com.mygdx.game.ui.StaticEntity;
 

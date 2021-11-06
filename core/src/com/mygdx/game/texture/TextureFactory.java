@@ -1,4 +1,4 @@
-package com.mygdx.game.cards.texture;
+package com.mygdx.game.texture;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;

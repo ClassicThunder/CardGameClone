@@ -2,6 +2,7 @@ package com.mygdx.game.cards;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.hand.Hand;
 
@@ -10,11 +11,20 @@ public class Card {
 
     private final PolygonSprite polygon;
 
-    private boolean isHover = false;
+    private boolean isGrabbed = false;
 
+    // Actual
+    private Vector2 actualLocation = new Vector2();
+    private Vector2 actualSize = new Vector2();
+    private float actualRotation = 0.0f;
+
+    // Resting
     private Vector2 restingLocation = new Vector2();
     private Vector2 restingSize = new Vector2();
     private float restingRotation = 0.0f;
+
+    // Drag
+    private Vector2 dragLocation = new Vector2();
 
     public Card(Texture img) {
 
@@ -31,20 +41,15 @@ public class Card {
         this.polygon = new PolygonSprite(polyRegion);
     }
 
+    // ##### Input ##### //
     public void Reset() {
-
-        this.isHover = false;
+        this.isGrabbed = false;
     }
 
-    // Figure out where things should go
-    public void SetRestingPosition(Vector2 location, float rotation, Vector2 size) {
-
-        this.restingLocation = location;
-        this.restingRotation = rotation;
-        this.restingSize = size;
+    public void SetGrabbed(boolean isGrabbed) {
+        this.isGrabbed = isGrabbed;
     }
 
-    // Mouse Detection
     public boolean ContainsMouse(final Vector2 mouseLocation) {
 
         final float[] vertices = this.polygon.getVertices();
@@ -69,26 +74,50 @@ public class Card {
             lastY = vertY;
         }
 
-        this.isHover = oddNodes;
         return oddNodes;
     }
 
-    // Update
+    // ##### Layout ##### //
+    public void SetRestingPosition(Vector2 location, float rotation, Vector2 size) {
+
+        this.restingLocation = location;
+        this.restingRotation = rotation;
+        this.restingSize = size;
+
+        this.actualLocation = new Vector2(this.restingLocation);
+        this.actualRotation = this.restingRotation;
+        this.actualSize = new Vector2(this.restingSize);
+    }
+
+    public void SetDragPosition(Vector2 location) {
+
+        this.dragLocation = location;
+    }
+
+    // ##### Life Cycle ##### //
     public void Update() {
 
-        polygon.setOrigin(restingSize.x / 2f, restingSize.y / 2f);
-        polygon.setSize(restingSize.x, restingSize.y);
-        polygon.setRotation(restingRotation);
-        polygon.setPosition(restingLocation.x - restingSize.x / 2f, restingLocation.y - restingSize.y / 2f);
+        final float lerpAmount = 0.3f;
+
+        polygon.setOrigin(actualSize.x / 2f, actualSize.y / 2f);
+        polygon.setSize(actualSize.x, actualSize.y);
+
+        if (isGrabbed) {
+            actualRotation = MathUtils.lerp(actualRotation, 0, lerpAmount);
+            actualLocation = actualLocation.lerp(dragLocation, lerpAmount);
+
+        } else {
+            actualRotation = MathUtils.lerp(actualRotation, restingRotation, lerpAmount);
+            actualLocation = actualLocation.lerp(restingLocation, lerpAmount);
+        }
+
+        polygon.setRotation(actualRotation);
+        polygon.setPosition(actualLocation.x - actualSize.x / 2f, actualLocation.y - actualSize.y / 2f);
     }
 
     // Draw
     public void Draw(PolygonSpriteBatch batch) {
 
-        if (isHover) {
-            polygon.draw(batch, 0.2f);
-        } else {
-            polygon.draw(batch);
-        }
+        polygon.draw(batch);
     }
 }

@@ -15,57 +15,43 @@ public class Hand {
     final int MAX_CARDS = 11;
     private final List<Card> cardsInHand = new ArrayList<>(MAX_CARDS);
 
-    private final float centerX;
-    private final float maxWidth;
-
     private final CardBezier cardBezier;
+    private final Rectangle cardArea;
 
     static public final float CARD_WIDTH = 678;
     static public final float CARD_HEIGHT = 874;
 
     private final Vector2 cardSize = new Vector2(CARD_WIDTH, CARD_HEIGHT);
 
-    public Hand(float centerX, float maxWidth, float cardScale) {
+    private HandInputProcessor handInputProcessor = new HandInputProcessor(this);
 
-        this.centerX = centerX;
-        this.maxWidth = maxWidth;
+    public Hand(float centerX, float maxWidth, float cardScale) {
 
         this.cardSize.scl(cardScale);
 
-        Rectangle cardArea = new Rectangle(centerX - (maxWidth / 2f), 0, maxWidth, 200);
+        this.cardArea = new Rectangle(centerX - (maxWidth / 2f), 0, maxWidth, 200);
         this.cardBezier = new CardBezier(cardArea, this.cardSize);
     }
 
     public void AddCard(Card card) {
         cardsInHand.add(0, card);
+        this.cardBezier.FindRestingPosition(cardsInHand);
+    }
+
+    public List<Card> GetCards() {
+        return this.cardsInHand;
     }
 
     public void Update(final Vector2 mouseLocation) {
 
         for (Card card: cardsInHand) {
-            card.Reset();
-        }
-
-        this.cardBezier.FindRestingPosition(cardsInHand);
-
-        for (Card card: cardsInHand) {
             card.Update();
-        }
-
-        for (int x = cardsInHand.size() - 1; x >= 0; x--) {
-            if (cardsInHand.get(x).ContainsMouse(mouseLocation)) {
-                break;
-            }
         }
     }
 
     public void Draw(SpriteBatch batch, Texture debugTexture) {
 
-        float width = maxWidth - cardSize.x;
-        float left = centerX - (width / 2f);
-        float right = centerX + (width / 2f);
-
-        batch.draw(debugTexture, left, 0f, width, 200f);
+        batch.draw(debugTexture, cardArea.x, cardArea.y, cardArea.width, cardArea.height);
     }
 
     public void Draw(PolygonSpriteBatch polygonBatch) {
