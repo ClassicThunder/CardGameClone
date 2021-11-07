@@ -1,18 +1,22 @@
-package com.mygdx.game.hand;
+package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.cards.Card;
+import com.mygdx.game.character.CharacterEntity;
+import com.mygdx.game.hand.Hand;
 
 import java.util.List;
 
-public class HandInputProcessor {
+public class GameInputProcessor {
 
-    public HandInputProcessor(final Hand hand) {
+    private InputProcessor ip;
 
-        Gdx.input.setInputProcessor(new InputProcessor() {
+    public GameInputProcessor(final Hand hand, final CharacterEntity player, final CharacterEntity enemy) {
+
+        this.ip = new InputProcessor() {
 
             @Override
             public boolean keyDown(int keycode) {
@@ -56,7 +60,21 @@ public class HandInputProcessor {
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 
-                for (Card card: hand.GetCards()) {
+                Vector2 mouse = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
+
+                for (Card card : hand.GetCards()) {
+
+                    if (card.GetIsGrabbed()) {
+
+                        if (player.ContainsMouse(mouse)) {
+                            player.ApplyCard(card);;
+                        }
+
+                        if (enemy.ContainsMouse(mouse)) {
+                            enemy.ApplyCard(card);;
+                        }
+                    }
+
                     card.Reset();
                 }
 
@@ -68,7 +86,7 @@ public class HandInputProcessor {
 
                 Vector2 mouse = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
 
-                for (Card card: hand.GetCards()) {
+                for (Card card : hand.GetCards()) {
                     card.SetDragPosition(mouse);
                 }
 
@@ -84,6 +102,14 @@ public class HandInputProcessor {
             public boolean scrolled(float amountX, float amountY) {
                 return false;
             }
-        });
+        };
+    }
+
+    public void Activate() {
+        Gdx.input.setInputProcessor(ip);
+    }
+
+    public void Deactivate() {
+        Gdx.input.setInputProcessor(null);
     }
 }

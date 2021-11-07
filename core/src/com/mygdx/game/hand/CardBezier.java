@@ -29,21 +29,21 @@ public class CardBezier {
 
     public void FindRestingPosition(List<Card> cardsInHand) {
 
-        float cardCount = (float)(cardsInHand.size() - 1);
+        float cardCount = (float) (cardsInHand.size() - 1);
 
         for (int x = 0; x < cardsInHand.size(); x++) {
 
-            float pct = (float)x / cardCount;
+            float pct = (float) x / cardCount;
 
             Vector2 location = Bezier.quadratic(new Vector2(), pct,
                     new Vector2(paddedLeft, 0),
-                    new Vector2(centerX , 100f),
+                    new Vector2(centerX, 100f),
                     new Vector2(paddedRight, 0),
                     new Vector2());
 
             float maxY = Bezier.quadratic(new Vector2(), 0.5f,
                     new Vector2(paddedLeft, 0),
-                    new Vector2(centerX , 100f),
+                    new Vector2(centerX, 100f),
                     new Vector2(paddedRight, 0),
                     new Vector2()).y;
 

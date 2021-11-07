@@ -23,7 +23,7 @@ public class Hand {
 
     private final Vector2 cardSize = new Vector2(CARD_WIDTH, CARD_HEIGHT);
 
-    private HandInputProcessor handInputProcessor = new HandInputProcessor(this);
+
 
     public Hand(float centerX, float maxWidth, float cardScale) {
 
@@ -44,19 +44,14 @@ public class Hand {
 
     public void Update(final Vector2 mouseLocation) {
 
-        for (Card card: cardsInHand) {
+        for (Card card : cardsInHand) {
             card.Update();
         }
     }
 
-    public void Draw(SpriteBatch batch, Texture debugTexture) {
-
-        batch.draw(debugTexture, cardArea.x, cardArea.y, cardArea.width, cardArea.height);
-    }
-
     public void Draw(PolygonSpriteBatch polygonBatch) {
 
-        for (Card card: cardsInHand) {
+        for (Card card : cardsInHand) {
             card.Draw(polygonBatch);
         }
     }

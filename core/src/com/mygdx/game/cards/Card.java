@@ -1,13 +1,17 @@
 package com.mygdx.game.cards;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.PolygonRegion;
+import com.badlogic.gdx.graphics.g2d.PolygonSprite;
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.character.CharacterStats;
 import com.mygdx.game.hand.Hand;
 
 
-public class Card {
+public abstract class Card {
 
     private final PolygonSprite polygon;
 
@@ -29,17 +33,20 @@ public class Card {
     public Card(Texture img) {
 
         TextureRegion textureRegion = new TextureRegion(img);
-        float[] verts = new float[] {
+        float[] verts = new float[]{
                 0, 0,
                 Hand.CARD_WIDTH, 0,
                 Hand.CARD_WIDTH, Hand.CARD_HEIGHT,
                 0, Hand.CARD_HEIGHT};
-        short[] tris = new short[] { 0, 1, 2, 0, 2, 3};
+        short[] tris = new short[]{0, 1, 2, 0, 2, 3};
 
         PolygonRegion polyRegion = new PolygonRegion(textureRegion, verts, tris);
 
         this.polygon = new PolygonSprite(polyRegion);
     }
+
+    // ##### Effects ##### //
+    public abstract void ApplyEffects(CharacterStats stats);
 
     // ##### Input ##### //
     public void Reset() {
@@ -48,6 +55,10 @@ public class Card {
 
     public void SetGrabbed(boolean isGrabbed) {
         this.isGrabbed = isGrabbed;
+    }
+
+    public boolean GetIsGrabbed() {
+        return this.isGrabbed;
     }
 
     public boolean ContainsMouse(final Vector2 mouseLocation) {
