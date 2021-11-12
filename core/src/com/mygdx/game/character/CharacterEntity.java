@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.cards.Card;
+import com.mygdx.game.deckengine.cards.Card;
 
 public class CharacterEntity {
 
@@ -14,7 +14,7 @@ public class CharacterEntity {
 
     private final BitmapFont font;
 
-    public CharacterEntity(Texture texture, Vector2 location) {
+    public CharacterEntity(CharacterType characterType, Texture texture, Vector2 location) {
 
         Vector2 size = new Vector2(texture.getWidth(), texture.getHeight());
 
@@ -23,7 +23,7 @@ public class CharacterEntity {
         sprite.setOrigin(size.x / 2f, 0);
         sprite.setOriginBasedPosition(location.x, location.y);
 
-        characterStats = new CharacterStats(120);
+        characterStats = new CharacterStats(characterType, 120);
 
         font = new BitmapFont();
     }
@@ -31,6 +31,11 @@ public class CharacterEntity {
     public boolean ContainsMouse(Vector2 mouse) {
 
         return sprite.getBoundingRectangle().contains(mouse);
+    }
+
+    public boolean CanApplyCard(Card card) {
+
+        return card.CanApplyEffects(characterStats);
     }
 
     public void ApplyCard(Card card) {

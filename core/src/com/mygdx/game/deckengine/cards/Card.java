@@ -1,5 +1,6 @@
-package com.mygdx.game.cards;
+package com.mygdx.game.deckengine.cards;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonRegion;
 import com.badlogic.gdx.graphics.g2d.PolygonSprite;
@@ -8,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.character.CharacterStats;
-import com.mygdx.game.hand.Hand;
+import com.mygdx.game.deckengine.hand.Hand;
 
 
 public abstract class Card {
@@ -16,6 +17,9 @@ public abstract class Card {
     private final PolygonSprite polygon;
 
     private boolean isGrabbed = false;
+
+    private boolean isPlayable = false;
+    private boolean isNotPlayable = false;
 
     // Actual
     private Vector2 actualLocation = new Vector2();
@@ -46,11 +50,15 @@ public abstract class Card {
     }
 
     // ##### Effects ##### //
+    public abstract boolean CanApplyEffects(CharacterStats stats);
+
     public abstract void ApplyEffects(CharacterStats stats);
 
     // ##### Input ##### //
     public void Reset() {
         this.isGrabbed = false;
+        this.isPlayable = false;
+        this.isNotPlayable = false;
     }
 
     public void SetGrabbed(boolean isGrabbed) {
@@ -59,6 +67,14 @@ public abstract class Card {
 
     public boolean GetIsGrabbed() {
         return this.isGrabbed;
+    }
+
+    public void SetIsPlayable(boolean isPlayable) {
+        this.isPlayable = isPlayable;
+    }
+
+    public void SetIsNotPlayable(boolean isNotPlayable) {
+        this.isNotPlayable = isNotPlayable;
     }
 
     public boolean ContainsMouse(final Vector2 mouseLocation) {
@@ -116,7 +132,6 @@ public abstract class Card {
         if (isGrabbed) {
             actualRotation = MathUtils.lerp(actualRotation, 0, lerpAmount);
             actualLocation = actualLocation.lerp(dragLocation, lerpAmount);
-
         } else {
             actualRotation = MathUtils.lerp(actualRotation, restingRotation, lerpAmount);
             actualLocation = actualLocation.lerp(restingLocation, lerpAmount);
@@ -128,6 +143,15 @@ public abstract class Card {
 
     // Draw
     public void Draw(PolygonSpriteBatch batch) {
+
+        if (isPlayable) {
+            polygon.setColor(Color.GREEN);
+        } else if (isNotPlayable) {
+            polygon.setColor(Color.RED);
+        } else {
+            polygon.setColor(Color.WHITE);
+        }
+
 
         polygon.draw(batch);
     }

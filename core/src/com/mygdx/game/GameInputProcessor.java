@@ -1,22 +1,21 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.cards.Card;
 import com.mygdx.game.character.CharacterEntity;
-import com.mygdx.game.hand.Hand;
-
-import java.util.List;
+import com.mygdx.game.deckengine.cards.Card;
+import com.mygdx.game.deckengine.hand.Hand;
 
 public class GameInputProcessor {
 
-    private InputProcessor ip;
+    private final InputProcessor ip;
 
     public GameInputProcessor(final Hand hand, final CharacterEntity player, final CharacterEntity enemy) {
 
         this.ip = new InputProcessor() {
+
+            Card grabbedCard = null;
 
             @Override
             public boolean keyDown(int keycode) {
@@ -38,23 +37,9 @@ public class GameInputProcessor {
 
                 Vector2 mouse = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
 
-                List<Card> cards = hand.GetCards();
+                grabbedCard = hand.GrabCard(mouse);
 
-                if (button == Input.Buttons.LEFT) {
-
-                    for (int x = cards.size() - 1; x >= 0; x--) {
-                        Card currentCard = cards.get(x);
-                        if (currentCard.ContainsMouse(mouse)) {
-
-                            currentCard.SetGrabbed(true);
-                            currentCard.SetDragPosition(mouse);
-
-                            return true;
-                        }
-                    }
-                }
-
-                return false;
+                return true;
             }
 
             @Override
@@ -62,23 +47,20 @@ public class GameInputProcessor {
 
                 Vector2 mouse = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
 
-                for (Card card : hand.GetCards()) {
+                if (grabbedCard != null) {
 
-                    if (card.GetIsGrabbed()) {
-
-                        if (player.ContainsMouse(mouse)) {
-                            player.ApplyCard(card);;
-                        }
-
-                        if (enemy.ContainsMouse(mouse)) {
-                            enemy.ApplyCard(card);;
-                        }
+                    if (player.ContainsMouse(mouse) && player.CanApplyCard(grabbedCard)) {
+                        player.ApplyCard(grabbedCard); // Card is Played
                     }
 
-                    card.Reset();
+                    if (enemy.ContainsMouse(mouse) && enemy.CanApplyCard(grabbedCard)) {
+                        enemy.ApplyCard(grabbedCard); // Card is Played
+                    }
                 }
 
-                return false;
+                hand.ResetCards();
+
+                return true;
             }
 
             @Override
@@ -86,11 +68,29 @@ public class GameInputProcessor {
 
                 Vector2 mouse = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
 
-                for (Card card : hand.GetCards()) {
-                    card.SetDragPosition(mouse);
+                if (grabbedCard != null) {
+
+                    grabbedCard.SetDragPosition(mouse);
+
+                    if (player.ContainsMouse(mouse)) {
+                        if (player.CanApplyCard(grabbedCard)) {
+                            grabbedCard.SetIsPlayable(true);
+                        } else {
+                            grabbedCard.SetIsNotPlayable(true);
+                        }
+                    } else if (enemy.ContainsMouse(mouse)) {
+                        if (enemy.CanApplyCard(grabbedCard)) {
+                            grabbedCard.SetIsPlayable(true);
+                        } else {
+                            grabbedCard.SetIsNotPlayable(true);
+                        }
+                    } else {
+                        grabbedCard.SetIsPlayable(false);
+                        grabbedCard.SetIsNotPlayable(false);
+                    }
                 }
 
-                return false;
+                return true;
             }
 
             @Override
