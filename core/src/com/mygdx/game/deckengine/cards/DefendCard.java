@@ -6,8 +6,8 @@ import com.mygdx.game.character.CharacterType;
 
 public class DefendCard extends Card {
 
-    public DefendCard(Texture img) {
-        super(img);
+    public DefendCard(CardLayout cardLayout, Texture img) {
+        super(cardLayout, img);
     }
 
     @Override

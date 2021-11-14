@@ -6,8 +6,8 @@ import com.mygdx.game.character.CharacterType;
 
 public class StrikeCard extends Card {
 
-    public StrikeCard(Texture img) {
-        super(img);
+    public StrikeCard(CardLayout cardLayout, Texture img) {
+        super(cardLayout, img);
     }
 
     @Override

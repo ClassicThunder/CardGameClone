@@ -22,9 +22,9 @@ public abstract class Card {
     private boolean isNotPlayable = false;
 
     // Actual
-    private Vector2 actualLocation = new Vector2();
-    private Vector2 actualSize = new Vector2();
-    private float actualRotation = 0.0f;
+    private Vector2 actualLocation;
+    private Vector2 actualSize;
+    private float actualRotation;
 
     // Resting
     private Vector2 restingLocation = new Vector2();
@@ -34,7 +34,7 @@ public abstract class Card {
     // Drag
     private Vector2 dragLocation = new Vector2();
 
-    public Card(Texture img) {
+    public Card(CardLayout cardLayout, Texture img) {
 
         TextureRegion textureRegion = new TextureRegion(img);
         float[] verts = new float[]{
@@ -47,6 +47,10 @@ public abstract class Card {
         PolygonRegion polyRegion = new PolygonRegion(textureRegion, verts, tris);
 
         this.polygon = new PolygonSprite(polyRegion);
+
+        this.actualLocation = cardLayout.getDrawPosition().getLocation();
+        this.actualRotation = cardLayout.getDrawPosition().getRotation();
+        this.actualSize = cardLayout.getDrawPosition().getSize();
     }
 
     // ##### Effects ##### //
@@ -105,15 +109,21 @@ public abstract class Card {
     }
 
     // ##### Layout ##### //
+    public Vector2 GetActualLocation() {
+
+        return this.actualLocation;
+    }
+
+    public Vector2 GetActualSize() {
+
+        return this.actualSize;
+    }
+
     public void SetRestingPosition(Vector2 location, float rotation, Vector2 size) {
 
         this.restingLocation = location;
         this.restingRotation = rotation;
         this.restingSize = size;
-
-        this.actualLocation = new Vector2(this.restingLocation);
-        this.actualRotation = this.restingRotation;
-        this.actualSize = new Vector2(this.restingSize);
     }
 
     public void SetDragPosition(Vector2 location) {
@@ -124,18 +134,20 @@ public abstract class Card {
     // ##### Life Cycle ##### //
     public void Update() {
 
-        final float lerpAmount = 0.3f;
-
-        polygon.setOrigin(actualSize.x / 2f, actualSize.y / 2f);
-        polygon.setSize(actualSize.x, actualSize.y);
+        final float lerpAmount = 0.15f;
 
         if (isGrabbed) {
             actualRotation = MathUtils.lerp(actualRotation, 0, lerpAmount);
             actualLocation = actualLocation.lerp(dragLocation, lerpAmount);
+            actualSize = actualSize.lerp(restingSize, lerpAmount);
         } else {
             actualRotation = MathUtils.lerp(actualRotation, restingRotation, lerpAmount);
             actualLocation = actualLocation.lerp(restingLocation, lerpAmount);
+            actualSize = actualSize.lerp(restingSize, lerpAmount);
         }
+
+        polygon.setOrigin(actualSize.x / 2f, actualSize.y / 2f);
+        polygon.setSize(actualSize.x, actualSize.y);
 
         polygon.setRotation(actualRotation);
         polygon.setPosition(actualLocation.x - actualSize.x / 2f, actualLocation.y - actualSize.y / 2f);
@@ -151,7 +163,6 @@ public abstract class Card {
         } else {
             polygon.setColor(Color.WHITE);
         }
-
 
         polygon.draw(batch);
     }

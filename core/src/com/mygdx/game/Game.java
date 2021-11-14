@@ -2,17 +2,16 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.character.CharacterEntity;
 import com.mygdx.game.character.CharacterType;
+import com.mygdx.game.deckengine.cards.CardLayout;
+import com.mygdx.game.deckengine.cards.CardPosition;
 import com.mygdx.game.deckengine.cards.StrikeCard;
 import com.mygdx.game.deckengine.hand.Hand;
-import com.mygdx.game.texture.TextureFactory;
 import com.mygdx.game.ui.StaticEntity;
 import com.mygdx.game.utils.Timer;
 import com.mygdx.game.utils.TimerFunction;
@@ -22,13 +21,9 @@ public class Game extends ApplicationAdapter {
     SpriteBatch batch;
     PolygonSpriteBatch polygonBatch;
 
-    Texture defendImage;
-    Texture strikeImage;
-    Texture enemyImage;
-    Texture playerImage;
+    GameContent content;
 
-    Texture red;
-
+    CardLayout cardLayout;
     Hand hand;
 
     CharacterEntity player;
@@ -49,13 +44,8 @@ public class Game extends ApplicationAdapter {
         batch = new SpriteBatch();
         polygonBatch = new PolygonSpriteBatch();
 
-        defendImage = new Texture("Defend_R.png");
-        strikeImage = new Texture("Strike_R.png");
-
-        enemyImage = new Texture("Book_of_stabbing_pretty.png");
-        playerImage = new Texture("Silent.png");
-
-        red = TextureFactory.Generate(Color.RED);
+        content = new GameContent();
+        content.Load();
 
         createUI();
         createHand();
@@ -70,33 +60,36 @@ public class Game extends ApplicationAdapter {
                 if (hand.GetCardCount() == 11) {
                     hand.ClearCards();
                 } else {
-                    hand.AddCard(new StrikeCard(strikeImage));
+                    hand.AddCard(new StrikeCard(cardLayout, content.GetTexture("CARD_STRIKE")));
                 }
             }
         });
-
     }
 
     private void createUI() {
 
-        float pileSize = 64f;
+        float pileSize = 128f;
         float pileBuffer = 15f + pileSize;
+        Vector2 pileSizeVector = new Vector2(pileSize, pileSize);
 
-        drawPile = new StaticEntity(red,
-                new Vector2(pileBuffer, pileBuffer),
-                new Vector2(pileSize, pileSize));
+        Vector2 drawLocation = new Vector2(pileBuffer, pileBuffer);
+        Vector2 discardLocation = new Vector2(Gdx.graphics.getWidth() - pileBuffer, pileBuffer);
 
-        discardPile = new StaticEntity(red,
-                new Vector2(Gdx.graphics.getWidth() - pileBuffer, pileBuffer),
-                new Vector2(pileSize, pileSize));
+        cardLayout = new CardLayout(
+                new CardPosition(drawLocation, pileSizeVector, 0f),
+                new CardPosition(discardLocation, pileSizeVector, 0f));
 
-        energy = new StaticEntity(red,
+        drawPile = new StaticEntity(content.GetTexture("UX_DRAW"), drawLocation, pileSizeVector);
+
+        discardPile = new StaticEntity(content.GetTexture("UX_DISCARD"), discardLocation, pileSizeVector);
+
+        energy = new StaticEntity(content.GetDebugTexture(),
                 new Vector2(pileBuffer * 2, pileBuffer * 2),
-                new Vector2(pileSize, pileSize));
+                pileSizeVector);
 
-        endTurn = new StaticEntity(red,
+        endTurn = new StaticEntity(content.GetDebugTexture(),
                 new Vector2(Gdx.graphics.getWidth() - pileBuffer * 2, pileBuffer * 2),
-                new Vector2(pileSize, pileSize));
+                pileSizeVector);
     }
 
     private void createHand() {
@@ -104,7 +97,7 @@ public class Game extends ApplicationAdapter {
         float center = Gdx.graphics.getWidth() / 2f;
 
         float handWidth = Gdx.graphics.getWidth() - 400;
-        hand = new Hand(center, handWidth, 0.35f);
+        hand = new Hand(content, cardLayout, center, handWidth, 0.35f);
     }
 
     private void createCharacters() {
@@ -112,10 +105,10 @@ public class Game extends ApplicationAdapter {
         float centerX = Gdx.graphics.getWidth() / 2f;
         float centerY = Gdx.graphics.getHeight() / 2f;
 
-        player = new CharacterEntity(CharacterType.PLAYER, playerImage,
+        player = new CharacterEntity(CharacterType.PLAYER, content.GetTexture("PLAYER"),
                 new Vector2(centerX - 300, centerY - 150));
 
-        enemy = new CharacterEntity(CharacterType.ENEMY, enemyImage,
+        enemy = new CharacterEntity(CharacterType.ENEMY, content.GetTexture("ENEMY"),
                 new Vector2(centerX + 300, centerY - 150));
     }
 
@@ -123,15 +116,11 @@ public class Game extends ApplicationAdapter {
     @Override
     public void render() {
 
-        timer.Update();
-
         ScreenUtils.clear(0, 0, 0, 1);
 
-        Vector2 mouse = new Vector2(
-                Gdx.input.getX(),
-                Gdx.graphics.getHeight() - Gdx.input.getY());
-
-        hand.Update(mouse);
+        // ##### Update ##### //
+        timer.Update();
+        hand.Update();
 
         // ##### Draw Sprites ##### //
         batch.begin();
@@ -144,11 +133,15 @@ public class Game extends ApplicationAdapter {
         player.Draw(batch);
         enemy.Draw(batch);
 
+        hand.Draw(batch);
+
         batch.end();
 
         // ##### Draw Polygons ##### //
         polygonBatch.begin();
+
         hand.Draw(polygonBatch);
+
         polygonBatch.end();
     }
 
@@ -158,11 +151,6 @@ public class Game extends ApplicationAdapter {
         batch.dispose();
         polygonBatch.dispose();
 
-        defendImage.dispose();
-        strikeImage.dispose();
-        enemyImage.dispose();
-        playerImage.dispose();
-
-        red.dispose();
+        content.Unload();
     }
 }

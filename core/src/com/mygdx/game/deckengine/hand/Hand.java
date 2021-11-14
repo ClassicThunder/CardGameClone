@@ -1,9 +1,12 @@
 package com.mygdx.game.deckengine.hand;
 
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.mygdx.game.GameContent;
 import com.mygdx.game.deckengine.cards.Card;
+import com.mygdx.game.deckengine.cards.CardLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +16,8 @@ public class Hand {
     final int MAX_CARDS = 11;
     private final List<Card> cardsInHand = new ArrayList<>(MAX_CARDS);
 
+    private final GameContent content;
+    private final CardLayout cardLayout;
     private final CardBezier cardBezier;
     private final Rectangle cardArea;
 
@@ -21,7 +26,10 @@ public class Hand {
 
     private final Vector2 cardSize = new Vector2(CARD_WIDTH, CARD_HEIGHT);
 
-    public Hand(float centerX, float maxWidth, float cardScale) {
+    public Hand(GameContent content, CardLayout cardLayout, float centerX, float maxWidth, float cardScale) {
+
+        this.content = content;
+        this.cardLayout = cardLayout;
 
         this.cardSize.scl(cardScale);
 
@@ -69,7 +77,7 @@ public class Hand {
     }
 
     // LifeCycle
-    public void Update(final Vector2 mouseLocation) {
+    public void Update() {
 
         for (Card card : cardsInHand) {
             card.Update();
@@ -80,6 +88,18 @@ public class Hand {
 
         for (Card card : cardsInHand) {
             card.Draw(polygonBatch);
+        }
+    }
+
+    public void Draw(SpriteBatch batch) {
+
+        int x = 0;
+        for (Card card : cardsInHand) {
+
+            content.GetDebugFont().draw(batch, "[" + x + "]",
+                    card.GetActualLocation().x,
+                    card.GetActualLocation().y + (card.GetActualSize().y / 2f) + 25f);
+            x++;
         }
     }
 }
