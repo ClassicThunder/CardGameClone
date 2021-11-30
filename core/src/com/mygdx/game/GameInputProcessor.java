@@ -5,13 +5,18 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.character.CharacterEntity;
 import com.mygdx.game.deckengine.cards.Card;
+import com.mygdx.game.deckengine.hand.Discarder;
 import com.mygdx.game.deckengine.hand.Hand;
 
 public class GameInputProcessor {
 
     private final InputProcessor ip;
 
-    public GameInputProcessor(final Hand hand, final CharacterEntity player, final CharacterEntity enemy) {
+    public GameInputProcessor(
+            final Hand hand,
+            final Discarder discarder,
+            final CharacterEntity player,
+            final CharacterEntity enemy) {
 
         this.ip = new InputProcessor() {
 
@@ -51,10 +56,12 @@ public class GameInputProcessor {
 
                     if (player.ContainsMouse(mouse) && player.CanApplyCard(grabbedCard)) {
                         player.ApplyCard(grabbedCard); // Card is Played
+                        hand.Discard(discarder, grabbedCard);
                     }
 
                     if (enemy.ContainsMouse(mouse) && enemy.CanApplyCard(grabbedCard)) {
                         enemy.ApplyCard(grabbedCard); // Card is Played
+                        hand.Discard(discarder, grabbedCard);
                     }
                 }
 

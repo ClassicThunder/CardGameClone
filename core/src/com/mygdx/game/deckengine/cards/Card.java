@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.character.CharacterStats;
 import com.mygdx.game.deckengine.hand.Hand;
 
-
 public abstract class Card {
 
     private final PolygonSprite polygon;
@@ -25,6 +24,7 @@ public abstract class Card {
     private Vector2 actualLocation;
     private Vector2 actualSize;
     private float actualRotation;
+    private float alpha;
 
     // Resting
     private Vector2 restingLocation = new Vector2();
@@ -111,17 +111,26 @@ public abstract class Card {
     // ##### Layout ##### //
     public Vector2 GetActualLocation() {
 
-        return this.actualLocation;
+        return this.actualLocation.cpy();
     }
 
     public Vector2 GetActualSize() {
 
-        return this.actualSize;
+        return this.actualSize.cpy();
     }
 
     public void SetRestingPosition(Vector2 location, float rotation, Vector2 size) {
 
         this.restingLocation = location;
+        this.restingRotation = rotation;
+        this.restingSize = size;
+    }
+
+    public void SetRestingPositionCenter(Vector2 location, float rotation, Vector2 size) {
+
+        this.restingLocation = new Vector2(
+                location.x + (size.x / 2.0f),
+                location.y + (size.y / 2.0f));
         this.restingRotation = rotation;
         this.restingSize = size;
     }
@@ -134,7 +143,13 @@ public abstract class Card {
     // ##### Life Cycle ##### //
     public void Update() {
 
-        final float lerpAmount = 0.15f;
+        final float lerpAmount;
+
+        if (this.isGrabbed) {
+            lerpAmount = 0.35f;
+        } else {
+            lerpAmount = 0.10f;
+        }
 
         if (isGrabbed) {
             actualRotation = MathUtils.lerp(actualRotation, 0, lerpAmount);
@@ -150,11 +165,12 @@ public abstract class Card {
         polygon.setSize(actualSize.x, actualSize.y);
 
         polygon.setRotation(actualRotation);
-        polygon.setPosition(actualLocation.x - actualSize.x / 2f, actualLocation.y - actualSize.y / 2f);
+        polygon.setPosition(
+                actualLocation.x - actualSize.x / 2f,
+                actualLocation.y - actualSize.y / 2f);
     }
 
-    // Draw
-    public void Draw(PolygonSpriteBatch batch) {
+    public void Draw(PolygonSpriteBatch batch, float alpha) {
 
         if (isPlayable) {
             polygon.setColor(Color.GREEN);
@@ -164,6 +180,6 @@ public abstract class Card {
             polygon.setColor(Color.WHITE);
         }
 
-        polygon.draw(batch);
+        polygon.draw(batch, alpha);
     }
 }

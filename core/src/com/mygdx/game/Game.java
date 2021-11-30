@@ -2,19 +2,22 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.character.CharacterEntity;
 import com.mygdx.game.character.CharacterType;
-import com.mygdx.game.deckengine.cards.CardLayout;
-import com.mygdx.game.deckengine.cards.CardPosition;
-import com.mygdx.game.deckengine.cards.StrikeCard;
+import com.mygdx.game.deckengine.DiscardPile;
+import com.mygdx.game.deckengine.DrawPile;
+import com.mygdx.game.deckengine.cards.*;
+import com.mygdx.game.deckengine.hand.DiscardFunction;
+import com.mygdx.game.deckengine.hand.Discarder;
 import com.mygdx.game.deckengine.hand.Hand;
 import com.mygdx.game.ui.StaticEntity;
-import com.mygdx.game.utils.Timer;
-import com.mygdx.game.utils.TimerFunction;
+
+import java.util.List;
 
 public class Game extends ApplicationAdapter {
 
@@ -25,17 +28,21 @@ public class Game extends ApplicationAdapter {
 
     CardLayout cardLayout;
     Hand hand;
+    Discarder discarder;
+
+    Deck deck;
+    DrawPile drawPile;
+    DiscardPile discardPile;
 
     CharacterEntity player;
     CharacterEntity enemy;
 
-    StaticEntity drawPile;
-    StaticEntity discardPile;
+    StaticEntity drawPileEntity;
+    StaticEntity discardPileEntity;
 
     StaticEntity energy;
     StaticEntity endTurn;
 
-    private Timer timer;
     private GameInputProcessor gameInputProcessor;
 
     @Override
@@ -48,22 +55,11 @@ public class Game extends ApplicationAdapter {
         content.Load();
 
         createUI();
-        createHand();
+        createCardStuff();
         createCharacters();
 
-        gameInputProcessor = new GameInputProcessor(hand, player, enemy);
+        gameInputProcessor = new GameInputProcessor(hand, discarder, player, enemy);
         gameInputProcessor.Activate();
-
-        timer = new Timer(60 * 1, new TimerFunction() {
-            @Override
-            public void onTrigger() {
-                if (hand.GetCardCount() == 11) {
-                    hand.ClearCards();
-                } else {
-                    hand.AddCard(new StrikeCard(cardLayout, content.GetTexture("CARD_STRIKE")));
-                }
-            }
-        });
     }
 
     private void createUI() {
@@ -79,9 +75,13 @@ public class Game extends ApplicationAdapter {
                 new CardPosition(drawLocation, pileSizeVector, 0f),
                 new CardPosition(discardLocation, pileSizeVector, 0f));
 
-        drawPile = new StaticEntity(content.GetTexture("UX_DRAW"), drawLocation, pileSizeVector);
+        drawPileEntity = new StaticEntity(
+                content.GetTexture("UX_DRAW"),
+                drawLocation, pileSizeVector);
 
-        discardPile = new StaticEntity(content.GetTexture("UX_DISCARD"), discardLocation, pileSizeVector);
+        discardPileEntity = new StaticEntity(
+                content.GetTexture("UX_DISCARD"),
+                discardLocation, pileSizeVector);
 
         energy = new StaticEntity(content.GetDebugTexture(),
                 new Vector2(pileBuffer * 2, pileBuffer * 2),
@@ -92,12 +92,49 @@ public class Game extends ApplicationAdapter {
                 pileSizeVector);
     }
 
-    private void createHand() {
+    private void createCardStuff() {
 
+        //
+        Texture s = content.GetTexture("CARD_STRIKE");
+        Texture d = content.GetTexture("CARD_DEFEND");
+
+        this.deck = new Deck();
+        this.deck.AddCard(new StrikeCard(cardLayout, s));
+        this.deck.AddCard(new StrikeCard(cardLayout, s));
+        this.deck.AddCard(new StrikeCard(cardLayout, s));
+        this.deck.AddCard(new StrikeCard(cardLayout, s));
+        this.deck.AddCard(new StrikeCard(cardLayout, s));
+        this.deck.AddCard(new StrikeCard(cardLayout, s));
+        this.deck.AddCard(new DefendCard(cardLayout, d));
+        this.deck.AddCard(new DefendCard(cardLayout, d));
+        this.deck.AddCard(new DefendCard(cardLayout, d));
+        this.deck.AddCard(new DefendCard(cardLayout, d));
+
+        //
         float center = Gdx.graphics.getWidth() / 2f;
 
         float handWidth = Gdx.graphics.getWidth() - 400;
         hand = new Hand(content, cardLayout, center, handWidth, 0.35f);
+
+        //
+        this.discarder = new Discarder(cardLayout.getDiscardPosition(),
+                new DiscardFunction() {
+                    @Override
+                    public void onDiscard(List<Card> cards) {
+                        discardPile.AddCards(cards);
+                    }
+                });
+
+        //
+        this.drawPile = new DrawPile();
+        this.drawPile.SetPile(deck.GetCards());
+
+        this.discardPile = new DiscardPile();
+
+        //
+        for (int i = 0; i < 5; i++) {
+            this.hand.AddCard(drawPile.DrawTopCard());
+        }
     }
 
     private void createCharacters() {
@@ -119,14 +156,14 @@ public class Game extends ApplicationAdapter {
         ScreenUtils.clear(0, 0, 0, 1);
 
         // ##### Update ##### //
-        timer.Update();
         hand.Update();
+        discarder.Update();
 
         // ##### Draw Sprites ##### //
         batch.begin();
 
-        drawPile.Draw(batch);
-        discardPile.Draw(batch);
+        drawPileEntity.Draw(batch);
+        discardPileEntity.Draw(batch);
         energy.Draw(batch);
         endTurn.Draw(batch);
 
@@ -141,6 +178,7 @@ public class Game extends ApplicationAdapter {
         polygonBatch.begin();
 
         hand.Draw(polygonBatch);
+        discarder.Draw(polygonBatch);
 
         polygonBatch.end();
     }

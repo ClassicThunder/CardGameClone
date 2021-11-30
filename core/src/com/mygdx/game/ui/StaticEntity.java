@@ -1,31 +1,27 @@
 package com.mygdx.game.ui;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 
 public class StaticEntity {
 
     private final Texture texture;
-
     private final Vector2 size;
-    private final Vector2 location;
+    private final Vector2 center;
 
-    public StaticEntity(Texture texture, Vector2 location, Vector2 size) {
+    public StaticEntity(Texture texture, Vector2 center, Vector2 size) {
 
         this.texture = texture;
-
-        // Center the location
-        Matrix3 transformations = new Matrix3()
-                .setToTranslation(new Vector2(-size.x / 2, -size.y / 2));
-
-        this.location = location.mul(transformations);
+        this.center = center;
         this.size = size;
     }
 
     public void Draw(SpriteBatch batch) {
 
-        batch.draw(texture, location.x, location.y, size.x, size.y);
+        float x = center.x - (size.x / 2.0f);
+        float y = center.y - (size.y / 2.0f);
+        batch.draw(texture, x, y, size.x, size.y);
     }
 }

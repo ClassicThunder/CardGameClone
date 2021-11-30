@@ -13,17 +13,14 @@ import java.util.List;
 
 public class Hand {
 
+    static public final float CARD_WIDTH = 678;
+    static public final float CARD_HEIGHT = 874;
     final int MAX_CARDS = 11;
     private final List<Card> cardsInHand = new ArrayList<>(MAX_CARDS);
-
     private final GameContent content;
     private final CardLayout cardLayout;
     private final CardBezier cardBezier;
     private final Rectangle cardArea;
-
-    static public final float CARD_WIDTH = 678;
-    static public final float CARD_HEIGHT = 874;
-
     private final Vector2 cardSize = new Vector2(CARD_WIDTH, CARD_HEIGHT);
 
     public Hand(GameContent content, CardLayout cardLayout, float centerX, float maxWidth, float cardScale) {
@@ -39,16 +36,18 @@ public class Hand {
 
     // Card Info
     public void AddCard(Card card) {
+
         cardsInHand.add(0, card);
         this.cardBezier.FindRestingPosition(cardsInHand);
     }
 
     public void ClearCards() {
+
         cardsInHand.clear();
-        this.cardBezier.FindRestingPosition(cardsInHand);
     }
 
     public int GetCardCount() {
+
         return cardsInHand.size();
     }
 
@@ -69,6 +68,19 @@ public class Hand {
         return null;
     }
 
+    public void Discard(Discarder discard) {
+
+        discard.AddCards(cardsInHand);
+        cardsInHand.clear();
+    }
+
+    public void Discard(Discarder discard, Card card) {
+
+        discard.AddCard(card);
+        cardsInHand.remove(card);
+        this.cardBezier.FindRestingPosition(cardsInHand);
+    }
+
     public void ResetCards() {
 
         for (Card card : cardsInHand) {
@@ -87,7 +99,7 @@ public class Hand {
     public void Draw(PolygonSpriteBatch polygonBatch) {
 
         for (Card card : cardsInHand) {
-            card.Draw(polygonBatch);
+            card.Draw(polygonBatch, 1.0f);
         }
     }
 

@@ -2,10 +2,9 @@ package com.mygdx.game.utils;
 
 public class Timer {
 
-    private int framesElapsed;
     private final int framesTriggered;
-
     private final TimerFunction timerFunction;
+    private int framesElapsed;
 
     public Timer(int framesTriggered, TimerFunction onTrigger) {
 
