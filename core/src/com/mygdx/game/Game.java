@@ -15,6 +15,7 @@ import com.mygdx.game.deckengine.cards.*;
 import com.mygdx.game.deckengine.hand.DiscardFunction;
 import com.mygdx.game.deckengine.hand.Discarder;
 import com.mygdx.game.deckengine.hand.Hand;
+import com.mygdx.game.ui.Label;
 import com.mygdx.game.ui.StaticEntity;
 
 import java.util.List;
@@ -37,8 +38,8 @@ public class Game extends ApplicationAdapter {
     CharacterEntity player;
     CharacterEntity enemy;
 
-    StaticEntity drawPileEntity;
-    StaticEntity discardPileEntity;
+    Label drawPileLabel;
+    Label discardPileLabel;
 
     StaticEntity energy;
     StaticEntity endTurn;
@@ -75,11 +76,13 @@ public class Game extends ApplicationAdapter {
                 new CardPosition(drawLocation, pileSizeVector, 0f),
                 new CardPosition(discardLocation, pileSizeVector, 0f));
 
-        drawPileEntity = new StaticEntity(
+        drawPileLabel = new Label(
+                content.GetDebugFont(),
                 content.GetTexture("UX_DRAW"),
                 drawLocation, pileSizeVector);
 
-        discardPileEntity = new StaticEntity(
+        discardPileLabel = new Label(
+                content.GetDebugFont(),
                 content.GetTexture("UX_DISCARD"),
                 discardLocation, pileSizeVector);
 
@@ -122,6 +125,16 @@ public class Game extends ApplicationAdapter {
                     @Override
                     public void onDiscard(List<Card> cards) {
                         discardPile.AddCards(cards);
+
+                        // Shuffle if the hand is empty.
+                        if (hand.GetCardCount() == 0) {
+                            System.out.println("BOO!");
+
+                            drawPile.SetPile(discardPile.Empty());
+                        }
+
+                        discardPileLabel.setText("[" + discardPile.Size() + "]");
+                        drawPileLabel.setText("[" + drawPile.Size() + "]");
                     }
                 });
 
@@ -162,8 +175,8 @@ public class Game extends ApplicationAdapter {
         // ##### Draw Sprites ##### //
         batch.begin();
 
-        drawPileEntity.Draw(batch);
-        discardPileEntity.Draw(batch);
+        drawPileLabel.Draw(batch);
+        discardPileLabel.Draw(batch);
         energy.Draw(batch);
         endTurn.Draw(batch);
 

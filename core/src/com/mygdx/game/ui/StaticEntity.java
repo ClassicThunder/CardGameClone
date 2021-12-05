@@ -7,9 +7,9 @@ import com.badlogic.gdx.math.Vector2;
 
 public class StaticEntity {
 
-    private final Texture texture;
-    private final Vector2 size;
-    private final Vector2 center;
+    protected final Texture texture;
+    protected final Vector2 size;
+    protected final Vector2 center;
 
     public StaticEntity(Texture texture, Vector2 center, Vector2 size) {
 

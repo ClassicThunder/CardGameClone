@@ -7,7 +7,7 @@ import java.util.List;
 
 public class DiscardPile {
 
-    private List<Card> cards = new ArrayList<>();
+    private final List<Card> cards = new ArrayList<>();
 
     public DiscardPile() {
 
@@ -15,18 +15,24 @@ public class DiscardPile {
 
     public void AddCard(Card card) {
 
-        cards.add(card);
+        this.cards.add(card);
     }
 
     public void AddCards(List<Card> cards) {
 
-        cards.addAll(cards);
+        this.cards.addAll(cards);
+    }
+
+    public int Size() {
+
+        return this.cards.size();
     }
 
     public List<Card> Empty() {
 
-        List<Card> tempCards = new ArrayList<>(cards);
-        cards.clear();
+        List<Card> tempCards = new ArrayList<>(this.cards);
+        this.cards.clear();
+
         return tempCards;
     }
 }
