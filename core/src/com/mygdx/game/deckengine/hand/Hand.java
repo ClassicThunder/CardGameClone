@@ -5,8 +5,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.GameContent;
-import com.mygdx.game.deckengine.cards.Card;
-import com.mygdx.game.deckengine.cards.CardLayout;
+import com.mygdx.game.deckengine.card.Card;
+import com.mygdx.game.deckengine.card.CardLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,13 +68,13 @@ public class Hand {
         return null;
     }
 
-    public void Discard(Discarder discard) {
+    public void DiscardHand(Discarder discard) {
 
         discard.AddCards(cardsInHand);
         cardsInHand.clear();
     }
 
-    public void Discard(Discarder discard, Card card) {
+    public void DiscardCard(Discarder discard, Card card) {
 
         discard.AddCard(card);
         cardsInHand.remove(card);

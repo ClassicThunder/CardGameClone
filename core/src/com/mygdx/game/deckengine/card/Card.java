@@ -1,4 +1,4 @@
-package com.mygdx.game.deckengine.cards;
+package com.mygdx.game.deckengine.card;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,12 +14,11 @@ import com.mygdx.game.deckengine.hand.Hand;
 public abstract class Card {
 
     private final PolygonSprite polygon;
-
+    //
+    private final CardLayout cardLayout;
     private boolean isGrabbed = false;
-
     private boolean isPlayable = false;
     private boolean isNotPlayable = false;
-
     // Actual
     private Vector2 actualLocation;
     private Vector2 actualSize;
@@ -48,9 +47,9 @@ public abstract class Card {
 
         this.polygon = new PolygonSprite(polyRegion);
 
-        this.actualLocation = cardLayout.getDrawPosition().getLocation();
-        this.actualRotation = cardLayout.getDrawPosition().getRotation();
-        this.actualSize = cardLayout.getDrawPosition().getSize();
+        this.cardLayout = cardLayout;
+
+        ResetToDrawPosition();
     }
 
     // ##### Effects ##### //
@@ -60,9 +59,19 @@ public abstract class Card {
 
     // ##### Input ##### //
     public void Reset() {
+
         this.isGrabbed = false;
         this.isPlayable = false;
         this.isNotPlayable = false;
+    }
+
+    public void ResetToDrawPosition() {
+
+        Reset();
+
+        this.actualLocation = cardLayout.getDrawPosition().getLocation();
+        this.actualRotation = cardLayout.getDrawPosition().getRotation();
+        this.actualSize = cardLayout.getDrawPosition().getSize();
     }
 
     public void SetGrabbed(boolean isGrabbed) {
@@ -122,15 +131,6 @@ public abstract class Card {
     public void SetRestingPosition(Vector2 location, float rotation, Vector2 size) {
 
         this.restingLocation = location;
-        this.restingRotation = rotation;
-        this.restingSize = size;
-    }
-
-    public void SetRestingPositionCenter(Vector2 location, float rotation, Vector2 size) {
-
-        this.restingLocation = new Vector2(
-                location.x + (size.x / 2.0f),
-                location.y + (size.y / 2.0f));
         this.restingRotation = rotation;
         this.restingSize = size;
     }

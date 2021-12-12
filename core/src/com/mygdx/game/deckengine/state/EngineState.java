@@ -4,5 +4,6 @@ public enum EngineState {
     PlayerControl,
     Discarding,
     Drawing,
-    Shuffling
+    Shuffling,
+    EndingTurn
 }

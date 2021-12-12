@@ -1,9 +1,9 @@
 package com.mygdx.game.deckengine.state;
 
-import com.mygdx.game.deckengine.DiscardPile;
-import com.mygdx.game.deckengine.DrawPile;
 import com.mygdx.game.deckengine.hand.Discarder;
 import com.mygdx.game.deckengine.hand.Hand;
+import com.mygdx.game.deckengine.pile.DiscardPile;
+import com.mygdx.game.deckengine.pile.DrawPile;
 
 public class ShufflingState extends State {
 
@@ -23,11 +23,7 @@ public class ShufflingState extends State {
         hand.Update();
         discarder.Update();
 
-        if (hand.GetCardCount() == 0) {
-            return EngineState.Shuffling;
-        }
-
-        return EngineState.PlayerControl;
+        return EngineState.Shuffling;
     }
 
     @Override

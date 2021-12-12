@@ -5,9 +5,15 @@ import com.mygdx.game.deckengine.hand.Hand;
 import com.mygdx.game.deckengine.pile.DiscardPile;
 import com.mygdx.game.deckengine.pile.DrawPile;
 
-public class PlayerControlState extends State {
+/**
+ * 1. Discard all the cards
+ * 2. Draw
+ * 3. If draw runs out of cards Shuffle
+ * 4. Start new turn
+ */
+public class EndingTurnState extends State {
 
-    public PlayerControlState(Hand hand, DrawPile drawPile, DiscardPile discardPile, Discarder discarder) {
+    public EndingTurnState(Hand hand, DrawPile drawPile, DiscardPile discardPile, Discarder discarder) {
 
         super(hand, drawPile, discardPile, discarder);
     }
@@ -15,6 +21,7 @@ public class PlayerControlState extends State {
     @Override
     public void Enter() {
 
+        hand.DiscardHand(discarder);
     }
 
     @Override
@@ -23,11 +30,11 @@ public class PlayerControlState extends State {
         hand.Update();
         discarder.Update();
 
-        if (hand.GetCardCount() == 0) {
-            return EngineState.Shuffling;
+        if (discarder.GetCardCount() == 0) {
+            return EngineState.Drawing;
         }
 
-        return EngineState.PlayerControl;
+        return EngineState.EndingTurn;
     }
 
     @Override

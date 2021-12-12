@@ -3,8 +3,8 @@ package com.mygdx.game.deckengine.hand;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.deckengine.cards.Card;
-import com.mygdx.game.deckengine.cards.CardPosition;
+import com.mygdx.game.deckengine.card.Card;
+import com.mygdx.game.deckengine.card.CardPosition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +20,11 @@ public class Discarder {
 
         this.discardCardPosition = discardCardPosition;
         this.discardFunction = discardFunction;
+    }
+
+    public int GetCardCount() {
+
+        return cardsBeingDiscarded.size();
     }
 
     public void ClearCards() {

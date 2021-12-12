@@ -3,7 +3,7 @@ package com.mygdx.game.deckengine.hand;
 import com.badlogic.gdx.math.Bezier;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.deckengine.cards.Card;
+import com.mygdx.game.deckengine.card.Card;
 
 import java.util.List;
 

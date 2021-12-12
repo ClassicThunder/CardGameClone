@@ -1,4 +1,4 @@
-package com.mygdx.game.deckengine.cards;
+package com.mygdx.game.deckengine.card;
 
 public class CardLayout {
 

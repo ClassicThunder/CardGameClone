@@ -1,6 +1,6 @@
 package com.mygdx.game;
 
-import com.mygdx.game.deckengine.cards.Card;
+import com.mygdx.game.deckengine.card.Card;
 
 import java.util.ArrayList;
 import java.util.List;

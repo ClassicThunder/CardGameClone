@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.character.CharacterEntity;
 import com.mygdx.game.character.CharacterType;
 import com.mygdx.game.deckengine.DeckEngine;
+import com.mygdx.game.deckengine.pile.PileFunction;
 import com.mygdx.game.ui.Label;
 import com.mygdx.game.ui.StaticEntity;
 
@@ -57,7 +58,18 @@ public class Game extends ApplicationAdapter {
 
         deckEngine = new DeckEngine(
                 center, handWidth, drawLocation, discardLocation,
-                content, player, enemy);
+                content, player, enemy,
+                new PileFunction() {
+                    @Override
+                    public void onCardCountChanged(int cardCount) {
+                        drawPileLabel.setText("" + cardCount);
+                    }
+                }, new PileFunction() {
+                    @Override
+                    public void onCardCountChanged(int cardCount) {
+                        discardPileLabel.setText("" + cardCount);
+                    }
+                });
     }
 
     private void createUI() {
