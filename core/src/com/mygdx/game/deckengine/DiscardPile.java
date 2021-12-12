@@ -13,6 +13,11 @@ public class DiscardPile {
 
     }
 
+    public void ClearCards() {
+
+        this.cards.clear();
+    }
+
     public void AddCard(Card card) {
 
         this.cards.add(card);

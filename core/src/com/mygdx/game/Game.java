@@ -2,23 +2,15 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.character.CharacterEntity;
 import com.mygdx.game.character.CharacterType;
-import com.mygdx.game.deckengine.DiscardPile;
-import com.mygdx.game.deckengine.DrawPile;
-import com.mygdx.game.deckengine.cards.*;
-import com.mygdx.game.deckengine.hand.DiscardFunction;
-import com.mygdx.game.deckengine.hand.Discarder;
-import com.mygdx.game.deckengine.hand.Hand;
+import com.mygdx.game.deckengine.DeckEngine;
 import com.mygdx.game.ui.Label;
 import com.mygdx.game.ui.StaticEntity;
-
-import java.util.List;
 
 public class Game extends ApplicationAdapter {
 
@@ -27,13 +19,7 @@ public class Game extends ApplicationAdapter {
 
     GameContent content;
 
-    CardLayout cardLayout;
-    Hand hand;
-    Discarder discarder;
-
-    Deck deck;
-    DrawPile drawPile;
-    DiscardPile discardPile;
+    DeckEngine deckEngine;
 
     CharacterEntity player;
     CharacterEntity enemy;
@@ -43,8 +29,6 @@ public class Game extends ApplicationAdapter {
 
     StaticEntity energy;
     StaticEntity endTurn;
-
-    private GameInputProcessor gameInputProcessor;
 
     @Override
     public void create() {
@@ -56,11 +40,24 @@ public class Game extends ApplicationAdapter {
         content.Load();
 
         createUI();
-        createCardStuff();
         createCharacters();
+        createDeckEngine();
+    }
 
-        gameInputProcessor = new GameInputProcessor(hand, discarder, player, enemy);
-        gameInputProcessor.Activate();
+    private void createDeckEngine() {
+
+        float pileSize = 128f;
+        float pileBuffer = 15f + pileSize;
+
+        Vector2 drawLocation = new Vector2(pileBuffer, pileBuffer);
+        Vector2 discardLocation = new Vector2(Gdx.graphics.getWidth() - pileBuffer, pileBuffer);
+
+        float center = Gdx.graphics.getWidth() / 2f;
+        float handWidth = Gdx.graphics.getWidth() - 400;
+
+        deckEngine = new DeckEngine(
+                center, handWidth, drawLocation, discardLocation,
+                content, player, enemy);
     }
 
     private void createUI() {
@@ -71,10 +68,6 @@ public class Game extends ApplicationAdapter {
 
         Vector2 drawLocation = new Vector2(pileBuffer, pileBuffer);
         Vector2 discardLocation = new Vector2(Gdx.graphics.getWidth() - pileBuffer, pileBuffer);
-
-        cardLayout = new CardLayout(
-                new CardPosition(drawLocation, pileSizeVector, 0f),
-                new CardPosition(discardLocation, pileSizeVector, 0f));
 
         drawPileLabel = new Label(
                 content.GetDebugFont(),
@@ -95,61 +88,6 @@ public class Game extends ApplicationAdapter {
                 pileSizeVector);
     }
 
-    private void createCardStuff() {
-
-        //
-        Texture s = content.GetTexture("CARD_STRIKE");
-        Texture d = content.GetTexture("CARD_DEFEND");
-
-        this.deck = new Deck();
-        this.deck.AddCard(new StrikeCard(cardLayout, s));
-        this.deck.AddCard(new StrikeCard(cardLayout, s));
-        this.deck.AddCard(new StrikeCard(cardLayout, s));
-        this.deck.AddCard(new StrikeCard(cardLayout, s));
-        this.deck.AddCard(new StrikeCard(cardLayout, s));
-        this.deck.AddCard(new StrikeCard(cardLayout, s));
-        this.deck.AddCard(new DefendCard(cardLayout, d));
-        this.deck.AddCard(new DefendCard(cardLayout, d));
-        this.deck.AddCard(new DefendCard(cardLayout, d));
-        this.deck.AddCard(new DefendCard(cardLayout, d));
-
-        //
-        float center = Gdx.graphics.getWidth() / 2f;
-
-        float handWidth = Gdx.graphics.getWidth() - 400;
-        hand = new Hand(content, cardLayout, center, handWidth, 0.35f);
-
-        //
-        this.discarder = new Discarder(cardLayout.getDiscardPosition(),
-                new DiscardFunction() {
-                    @Override
-                    public void onDiscard(List<Card> cards) {
-                        discardPile.AddCards(cards);
-
-                        // Shuffle if the hand is empty.
-                        if (hand.GetCardCount() == 0) {
-                            System.out.println("BOO!");
-
-                            drawPile.SetPile(discardPile.Empty());
-                        }
-
-                        discardPileLabel.setText("[" + discardPile.Size() + "]");
-                        drawPileLabel.setText("[" + drawPile.Size() + "]");
-                    }
-                });
-
-        //
-        this.drawPile = new DrawPile();
-        this.drawPile.SetPile(deck.GetCards());
-
-        this.discardPile = new DiscardPile();
-
-        //
-        for (int i = 0; i < 5; i++) {
-            this.hand.AddCard(drawPile.DrawTopCard());
-        }
-    }
-
     private void createCharacters() {
 
         float centerX = Gdx.graphics.getWidth() / 2f;
@@ -168,12 +106,11 @@ public class Game extends ApplicationAdapter {
 
         ScreenUtils.clear(0, 0, 0, 1);
 
-        // ##### Update ##### //
-        hand.Update();
-        discarder.Update();
+        deckEngine.Update();
 
         // ##### Draw Sprites ##### //
         batch.begin();
+        polygonBatch.begin();
 
         drawPileLabel.Draw(batch);
         discardPileLabel.Draw(batch);
@@ -183,16 +120,9 @@ public class Game extends ApplicationAdapter {
         player.Draw(batch);
         enemy.Draw(batch);
 
-        hand.Draw(batch);
+        deckEngine.Draw(batch, polygonBatch);
 
         batch.end();
-
-        // ##### Draw Polygons ##### //
-        polygonBatch.begin();
-
-        hand.Draw(polygonBatch);
-        discarder.Draw(polygonBatch);
-
         polygonBatch.end();
     }
 

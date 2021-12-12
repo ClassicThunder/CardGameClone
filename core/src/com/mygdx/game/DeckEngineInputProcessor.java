@@ -8,11 +8,11 @@ import com.mygdx.game.deckengine.cards.Card;
 import com.mygdx.game.deckengine.hand.Discarder;
 import com.mygdx.game.deckengine.hand.Hand;
 
-public class GameInputProcessor {
+public class DeckEngineInputProcessor {
 
     private final InputProcessor ip;
 
-    public GameInputProcessor(
+    public DeckEngineInputProcessor(
             final Hand hand,
             final Discarder discarder,
             final CharacterEntity player,

@@ -22,6 +22,11 @@ public class Discarder {
         this.discardFunction = discardFunction;
     }
 
+    public void ClearCards() {
+
+        this.cardsBeingDiscarded.clear();
+    }
+
     public void AddCards(List<Card> cards) {
 
         for (Card card : cards) {

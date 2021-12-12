@@ -14,6 +14,11 @@ public class DrawPile {
 
     }
 
+    public void ClearCards() {
+
+        this.cards.clear();
+    }
+
     public int GetCards() {
 
         return this.cards.size();
