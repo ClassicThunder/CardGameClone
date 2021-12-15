@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.GameContent;
 import com.mygdx.game.deckengine.card.Card;
-import com.mygdx.game.deckengine.card.CardLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,22 +15,20 @@ public class Hand {
     static public final float CARD_WIDTH = 678;
     static public final float CARD_HEIGHT = 874;
     final int MAX_CARDS = 11;
+
     private final List<Card> cardsInHand = new ArrayList<>(MAX_CARDS);
     private final GameContent content;
-    private final CardLayout cardLayout;
     private final CardBezier cardBezier;
-    private final Rectangle cardArea;
-    private final Vector2 cardSize = new Vector2(CARD_WIDTH, CARD_HEIGHT);
 
-    public Hand(GameContent content, CardLayout cardLayout, float centerX, float maxWidth, float cardScale) {
+    public Hand(GameContent content, float centerX, float maxWidth, float cardScale) {
 
         this.content = content;
-        this.cardLayout = cardLayout;
 
-        this.cardSize.scl(cardScale);
+        Vector2 cardSize = new Vector2(CARD_WIDTH, CARD_HEIGHT);
+        cardSize.scl(cardScale);
 
-        this.cardArea = new Rectangle(centerX - (maxWidth / 2f), 0, maxWidth, 200);
-        this.cardBezier = new CardBezier(cardArea, this.cardSize);
+        Rectangle cardArea = new Rectangle(centerX - (maxWidth / 2f), 0, maxWidth, 200);
+        this.cardBezier = new CardBezier(cardArea, cardSize);
     }
 
     // Card Info

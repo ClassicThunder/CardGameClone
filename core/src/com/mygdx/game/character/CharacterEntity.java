@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.deckengine.card.Card;
 
 public class CharacterEntity {
 
@@ -33,14 +32,9 @@ public class CharacterEntity {
         return sprite.getBoundingRectangle().contains(mouse);
     }
 
-    public boolean CanApplyCard(Card card) {
+    public CharacterStats GetStats() {
 
-        return card.CanApplyEffects(characterStats);
-    }
-
-    public void ApplyCard(Card card) {
-
-        card.ApplyEffects(characterStats);
+        return characterStats;
     }
 
     public void Draw(SpriteBatch batch) {

@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.character.CharacterEntity;
 import com.mygdx.game.character.CharacterType;
 import com.mygdx.game.deckengine.DeckEngine;
+import com.mygdx.game.deckengine.energy.EnergyFunction;
 import com.mygdx.game.deckengine.pile.PileFunction;
 import com.mygdx.game.ui.Label;
 import com.mygdx.game.ui.StaticEntity;
@@ -27,8 +28,7 @@ public class Game extends ApplicationAdapter {
 
     Label drawPileLabel;
     Label discardPileLabel;
-
-    StaticEntity energy;
+    Label energy;
     StaticEntity endTurn;
 
     @Override
@@ -64,10 +64,17 @@ public class Game extends ApplicationAdapter {
                     public void onCardCountChanged(int cardCount) {
                         drawPileLabel.setText("" + cardCount);
                     }
-                }, new PileFunction() {
+                },
+                new PileFunction() {
                     @Override
                     public void onCardCountChanged(int cardCount) {
                         discardPileLabel.setText("" + cardCount);
+                    }
+                },
+                new EnergyFunction() {
+                    @Override
+                    public void onEnergyChanged(int energyCount) {
+                        energy.setText("" + energyCount);
                     }
                 });
     }
@@ -84,18 +91,23 @@ public class Game extends ApplicationAdapter {
         drawPileLabel = new Label(
                 content.GetDebugFont(),
                 content.GetTexture("UX_DRAW"),
-                drawLocation, pileSizeVector);
+                drawLocation,
+                pileSizeVector);
 
         discardPileLabel = new Label(
                 content.GetDebugFont(),
                 content.GetTexture("UX_DISCARD"),
-                discardLocation, pileSizeVector);
+                discardLocation,
+                pileSizeVector);
 
-        energy = new StaticEntity(content.GetDebugTexture(),
+        energy = new Label(
+                content.GetDebugFont(),
+                content.GetDebugTexture(),
                 new Vector2(pileBuffer * 2, pileBuffer * 2),
                 pileSizeVector);
 
-        endTurn = new StaticEntity(content.GetDebugTexture(),
+        endTurn = new StaticEntity(
+                content.GetDebugTexture(),
                 new Vector2(Gdx.graphics.getWidth() - pileBuffer * 2, pileBuffer * 2),
                 pileSizeVector);
     }
@@ -105,10 +117,14 @@ public class Game extends ApplicationAdapter {
         float centerX = Gdx.graphics.getWidth() / 2f;
         float centerY = Gdx.graphics.getHeight() / 2f;
 
-        player = new CharacterEntity(CharacterType.PLAYER, content.GetTexture("PLAYER"),
+        player = new CharacterEntity(
+                CharacterType.PLAYER,
+                content.GetTexture("PLAYER"),
                 new Vector2(centerX - 300, centerY - 150));
 
-        enemy = new CharacterEntity(CharacterType.ENEMY, content.GetTexture("ENEMY"),
+        enemy = new CharacterEntity(
+                CharacterType.ENEMY,
+                content.GetTexture("ENEMY"),
                 new Vector2(centerX + 300, centerY - 150));
     }
 

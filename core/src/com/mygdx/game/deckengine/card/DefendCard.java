@@ -11,6 +11,11 @@ public class DefendCard extends Card {
     }
 
     @Override
+    public int GetEnergyCost() {
+        return 1;
+    }
+
+    @Override
     public boolean CanApplyEffects(CharacterStats stats) {
         return (stats.getCharacterType() == CharacterType.PLAYER);
     }

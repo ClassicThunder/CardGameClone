@@ -53,6 +53,8 @@ public abstract class Card {
     }
 
     // ##### Effects ##### //
+    public abstract int GetEnergyCost();
+
     public abstract boolean CanApplyEffects(CharacterStats stats);
 
     public abstract void ApplyEffects(CharacterStats stats);

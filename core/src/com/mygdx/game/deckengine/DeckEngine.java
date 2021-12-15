@@ -7,7 +7,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Deck;
 import com.mygdx.game.GameContent;
 import com.mygdx.game.character.CharacterEntity;
+import com.mygdx.game.character.CharacterStats;
 import com.mygdx.game.deckengine.card.*;
+import com.mygdx.game.deckengine.energy.Energy;
+import com.mygdx.game.deckengine.energy.EnergyFunction;
 import com.mygdx.game.deckengine.hand.DiscardFunction;
 import com.mygdx.game.deckengine.hand.Discarder;
 import com.mygdx.game.deckengine.hand.Hand;
@@ -22,23 +25,27 @@ import java.util.Map;
 
 public class DeckEngine {
 
+    final Energy energy;
     final Deck deck;
     final Hand hand;
     final Discarder discarder;
     final DrawPile drawPile;
     final DiscardPile discardPile;
-    final private CardLayout cardLayout;
-    final private Map<EngineState, State> stateMapping = new HashMap<>();
+
     private final DeckEngineInputProcessor gameInputProcessor;
+
+    final private Map<EngineState, State> stateMapping = new HashMap<>();
     private EngineState currentEngineState = EngineState.PlayerControl;
     private State currentState;
 
     public DeckEngine(float center, float handWidth,
                       Vector2 drawLocation, Vector2 discardLocation,
-                      GameContent content, CharacterEntity player, CharacterEntity enemy,
-                      PileFunction drawPileUpdate, PileFunction discardPileUpdate) {
+                      GameContent content,
+                      CharacterEntity player, CharacterEntity enemy,
+                      PileFunction drawPileUpdate, PileFunction discardPileUpdate,
+                      EnergyFunction energyUpdate) {
 
-        cardLayout = new CardLayout(
+        CardLayout cardLayout = new CardLayout(
                 new CardPosition(drawLocation, new Vector2(100, 150), 0f),
                 new CardPosition(discardLocation, new Vector2(100, 150), 0f));
 
@@ -70,7 +77,7 @@ public class DeckEngine {
         deck.AddCard(new DefendCard(cardLayout, d));
         deck.AddCard(new DefendCard(cardLayout, d));
 
-        hand = new Hand(content, cardLayout, center, handWidth, 0.35f);
+        hand = new Hand(content, center, handWidth, 0.35f);
 
         gameInputProcessor = new DeckEngineInputProcessor(this, player, enemy);
         gameInputProcessor.Activate();
@@ -84,23 +91,42 @@ public class DeckEngine {
             hand.AddCard(drawPile.DrawTopCard());
         }
 
+        energy = new Energy(3, energyUpdate);
+
         stateMapping.put(
                 EngineState.PlayerControl,
-                new PlayerControlState(hand, drawPile, discardPile, discarder));
+                new PlayerControlState(hand, drawPile, discardPile, discarder, energy));
         stateMapping.put(
                 EngineState.Shuffling,
-                new ShufflingState(hand, drawPile, discardPile, discarder));
+                new ShufflingState(hand, drawPile, discardPile, discarder, energy));
         stateMapping.put(
                 EngineState.Discarding,
-                new DiscardingState(hand, drawPile, discardPile, discarder));
+                new DiscardingState(hand, drawPile, discardPile, discarder, energy));
         stateMapping.put(
                 EngineState.EndingTurn,
-                new EndingTurnState(hand, drawPile, discardPile, discarder));
+                new EndingTurnState(hand, drawPile, discardPile, discarder, energy));
         stateMapping.put(
                 EngineState.Drawing,
-                new DrawingState(hand, drawPile, discardPile, discarder));
+                new DrawingState(hand, drawPile, discardPile, discarder, energy));
 
         currentState = stateMapping.get(EngineState.PlayerControl);
+        currentState.Enter();
+    }
+
+    boolean canPlayCard(CharacterStats character, Card card) {
+
+        if (energy.GetEnergy() >= card.GetEnergyCost()) {
+            return card.CanApplyEffects(character);
+        }
+
+        return false;
+    }
+
+    void playCard(CharacterStats character, Card card) {
+
+        energy.AlterEnergy(-card.GetEnergyCost());
+        card.ApplyEffects(character);
+        hand.DiscardCard(discarder, card);
     }
 
     void requestEndTurn() {

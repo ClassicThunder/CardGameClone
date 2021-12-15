@@ -58,14 +58,14 @@ public class DeckEngineInputProcessor {
 
                 if (grabbedCard != null) {
 
-                    if (player.ContainsMouse(mouse) && player.CanApplyCard(grabbedCard)) {
-                        player.ApplyCard(grabbedCard); // Card is Played
-                        deckEngine.hand.DiscardCard(deckEngine.discarder, grabbedCard);
+                    if (player.ContainsMouse(mouse) &&
+                            deckEngine.canPlayCard(player.GetStats(), grabbedCard)) {
+                        deckEngine.playCard(player.GetStats(), grabbedCard);
                     }
 
-                    if (enemy.ContainsMouse(mouse) && enemy.CanApplyCard(grabbedCard)) {
-                        enemy.ApplyCard(grabbedCard); // Card is Played
-                        deckEngine.hand.DiscardCard(deckEngine.discarder, grabbedCard);
+                    if (enemy.ContainsMouse(mouse) &&
+                            deckEngine.canPlayCard(enemy.GetStats(), grabbedCard)) {
+                        deckEngine.playCard(enemy.GetStats(), grabbedCard);
                     }
                 }
 
@@ -84,13 +84,13 @@ public class DeckEngineInputProcessor {
                     grabbedCard.SetDragPosition(mouse);
 
                     if (player.ContainsMouse(mouse)) {
-                        if (player.CanApplyCard(grabbedCard)) {
+                        if (deckEngine.canPlayCard(player.GetStats(), grabbedCard)) {
                             grabbedCard.SetIsPlayable(true);
                         } else {
                             grabbedCard.SetIsNotPlayable(true);
                         }
                     } else if (enemy.ContainsMouse(mouse)) {
-                        if (enemy.CanApplyCard(grabbedCard)) {
+                        if (deckEngine.canPlayCard(enemy.GetStats(), grabbedCard)) {
                             grabbedCard.SetIsPlayable(true);
                         } else {
                             grabbedCard.SetIsNotPlayable(true);
