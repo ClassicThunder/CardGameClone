@@ -32,12 +32,14 @@ public class Label extends StaticEntity {
 
         GlyphLayout layout = new GlyphLayout(bitmapFont, text);
         this.textCenterX = super.center.x - (layout.width / 2.0f);
-        this.textCenterY = super.center.y + (super.size.y / 2.0f); // + (layout.height / 2.0f);
+        this.textCenterY = super.center.y + (super.size.y / 2.0f) + (layout.height / 2.0f);
     }
 
     public void Draw(SpriteBatch batch) {
 
-        super.Draw(batch);
+        if (texture != null) {
+            super.Draw(batch);
+        }
 
         bitmapFont.draw(batch, this.text, this.textCenterX, this.textCenterY);
     }

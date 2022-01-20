@@ -43,6 +43,7 @@ public class GameContent {
 
         textureMap.put("UX_DRAW", new Texture("Draw.png"));
         textureMap.put("UX_DISCARD", new Texture("Discard.png"));
+        textureMap.put("UX_ENERGY", new Texture("GreenEnergy.png"));
     }
 
     public void Unload() {

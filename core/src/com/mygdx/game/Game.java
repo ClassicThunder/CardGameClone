@@ -29,7 +29,7 @@ public class Game extends ApplicationAdapter {
     Label drawPileLabel;
     Label discardPileLabel;
     Label energy;
-    StaticEntity endTurn;
+    Label endTurn;
 
     @Override
     public void create() {
@@ -102,14 +102,16 @@ public class Game extends ApplicationAdapter {
 
         energy = new Label(
                 content.GetDebugFont(),
-                content.GetDebugTexture(),
+                content.GetTexture("UX_ENERGY"),
                 new Vector2(pileBuffer * 2, pileBuffer * 2),
-                pileSizeVector);
+                new Vector2(64, 64));
 
-        endTurn = new StaticEntity(
-                content.GetDebugTexture(),
+        endTurn = new Label(
+                content.GetDebugFont(),
+                null,
                 new Vector2(Gdx.graphics.getWidth() - pileBuffer * 2, pileBuffer * 2),
                 pileSizeVector);
+        endTurn.setText("Press [ENTER] to\nend turn");
     }
 
     private void createCharacters() {
