@@ -9,7 +9,7 @@ import com.mygdx.game.deckengine.card.Card;
 
 public class DeckEngineInputProcessor {
 
-    private final InputProcessor ip;
+    final InputProcessor ip;
 
     public DeckEngineInputProcessor(final DeckEngine deckEngine,
                                     final CharacterEntity player,

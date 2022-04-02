@@ -1,10 +1,10 @@
 package com.mygdx.game.deckengine;
 
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.Deck;
 import com.mygdx.game.GameContent;
 import com.mygdx.game.character.CharacterEntity;
 import com.mygdx.game.character.CharacterStats;
@@ -33,10 +33,13 @@ public class DeckEngine {
     final DiscardPile discardPile;
 
     private final DeckEngineInputProcessor gameInputProcessor;
+    public InputProcessor getGameInputProcessor() {
+        return gameInputProcessor.ip;
+    }
 
-    final private Map<EngineState, State> stateMapping = new HashMap<>();
-    private EngineState currentEngineState = EngineState.PlayerControl;
-    private State currentState;
+    Map<EngineState, State> stateMapping = new HashMap<>();
+    EngineState currentEngineState = EngineState.PlayerControl;
+    State currentState;
 
     public DeckEngine(float center, float handWidth,
                       Vector2 drawLocation, Vector2 discardLocation,
