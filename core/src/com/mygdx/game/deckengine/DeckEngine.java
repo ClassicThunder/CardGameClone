@@ -1,10 +1,12 @@
 package com.mygdx.game.deckengine;
 
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.GameContent;
 import com.mygdx.game.character.CharacterEntity;
 import com.mygdx.game.character.CharacterStats;
@@ -32,18 +34,21 @@ public class DeckEngine {
     final DrawPile drawPile;
     final DiscardPile discardPile;
 
+    // Input
+    Viewport viewport;
     private final DeckEngineInputProcessor gameInputProcessor;
     public InputProcessor getGameInputProcessor() {
         return gameInputProcessor.ip;
     }
 
+    // State
     Map<EngineState, State> stateMapping = new HashMap<>();
     EngineState currentEngineState = EngineState.PlayerControl;
     State currentState;
 
     public DeckEngine(float center, float handWidth,
                       Vector2 drawLocation, Vector2 discardLocation,
-                      GameContent content,
+                      Viewport viewport, GameContent content,
                       CharacterEntity player, CharacterEntity enemy,
                       PileFunction drawPileUpdate, PileFunction discardPileUpdate,
                       EnergyFunction energyUpdate) {
@@ -65,6 +70,8 @@ public class DeckEngine {
                     }
                 });
 
+        this.viewport = viewport;
+
         Texture s = content.GetTexture("CARD_STRIKE");
         Texture d = content.GetTexture("CARD_DEFEND");
 
@@ -83,7 +90,6 @@ public class DeckEngine {
         hand = new Hand(content, center, handWidth, 0.35f);
 
         gameInputProcessor = new DeckEngineInputProcessor(this, player, enemy);
-        gameInputProcessor.Activate();
 
         drawPile = new DrawPile(drawPileUpdate);
         drawPile.SetPile(deck.GetCards());

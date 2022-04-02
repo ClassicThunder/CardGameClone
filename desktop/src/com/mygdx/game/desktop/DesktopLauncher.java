@@ -10,8 +10,8 @@ public class DesktopLauncher {
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Card Game Test";
-		config.width = 1400;
-		config.height = 1050;
+		config.width = 1600;
+		config.height = 900;
 
 		new LwjglApplication(new Game(), config);
 	}

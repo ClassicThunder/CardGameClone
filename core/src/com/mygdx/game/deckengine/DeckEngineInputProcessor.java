@@ -1,9 +1,9 @@
 package com.mygdx.game.deckengine;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.character.CharacterEntity;
 import com.mygdx.game.deckengine.card.Card;
 
@@ -44,7 +44,9 @@ public class DeckEngineInputProcessor {
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
-                Vector2 mouse = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
+                Vector3 base = new Vector3(screenX, screenY, 0);
+                Vector3 unproject = deckEngine.viewport.unproject(base);
+                Vector2 mouse = new Vector2(unproject.x, unproject.y);
 
                 grabbedCard = deckEngine.hand.GrabCard(mouse);
 
@@ -54,7 +56,9 @@ public class DeckEngineInputProcessor {
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 
-                Vector2 mouse = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
+                Vector3 base = new Vector3(screenX, screenY, 0);
+                Vector3 unproject = deckEngine.viewport.unproject(base);
+                Vector2 mouse = new Vector2(unproject.x, unproject.y);
 
                 if (grabbedCard != null) {
 
@@ -77,7 +81,9 @@ public class DeckEngineInputProcessor {
             @Override
             public boolean touchDragged(int screenX, int screenY, int pointer) {
 
-                Vector2 mouse = new Vector2(screenX, Gdx.graphics.getHeight() - screenY);
+                Vector3 base = new Vector3(screenX, screenY, 0);
+                Vector3 unproject = deckEngine.viewport.unproject(base);
+                Vector2 mouse = new Vector2(unproject.x, unproject.y);
 
                 if (grabbedCard != null) {
 
@@ -114,13 +120,5 @@ public class DeckEngineInputProcessor {
                 return false;
             }
         };
-    }
-
-    public void Activate() {
-        Gdx.input.setInputProcessor(ip);
-    }
-
-    public void Deactivate() {
-        Gdx.input.setInputProcessor(null);
     }
 }
