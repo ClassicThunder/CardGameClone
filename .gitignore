@@ -99,6 +99,7 @@ gradle-app.setting
 /android/build/
 /core/build/
 /desktop/build/
+/combat/build/
 /html/build/
 /ios/build/
 

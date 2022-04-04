@@ -1,16 +1,21 @@
 package com.mygdx.game.screens;
 
+import classicthunder.combat.cards.Deck;
+import classicthunder.combat.cards.DefendCard;
+import classicthunder.combat.cards.StrikeCard;
+import classicthunder.combat.combat.CombatEngine;
+import classicthunder.combat.combat.character.CharacterEntity;
+import classicthunder.combat.combat.character.CharacterType;
+import classicthunder.combat.combat.layout.DeckLayout;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.GameContent;
-import com.mygdx.game.character.CharacterEntity;
-import com.mygdx.game.character.CharacterType;
-import com.mygdx.game.deckengine.DeckEngine;
 import com.mygdx.game.ui.Label;
 import de.eskalon.commons.screen.ManagedScreen;
 
@@ -24,7 +29,7 @@ public class CombatScreen extends ManagedScreen {
 
     private GameContent content;
 
-    private DeckEngine deckEngine;
+    private CombatEngine deckEngine;
 
     private CharacterEntity player;
     private CharacterEntity enemy;
@@ -116,12 +121,25 @@ public class CombatScreen extends ManagedScreen {
         Vector2 drawLocation = new Vector2(pileBuffer, pileBuffer);
         Vector2 discardLocation = new Vector2(worldWidth - pileBuffer, pileBuffer);
 
-        float center = worldWidth / 2f;
-        float handWidth = worldWidth - 400;
+        DeckLayout layout = new DeckLayout(viewport, drawLocation, discardLocation);
+        Texture s = content.GetTexture("CARD_STRIKE");
+        Texture d = content.GetTexture("CARD_DEFEND");
 
-        deckEngine = new DeckEngine(
-                center, handWidth, drawLocation, discardLocation,
-                viewport, content, player, enemy,
+        Deck deck = new Deck();
+        deck.AddCard(new StrikeCard(s));
+        deck.AddCard(new StrikeCard(s));
+        deck.AddCard(new StrikeCard(s));
+        deck.AddCard(new StrikeCard(s));
+        deck.AddCard(new StrikeCard(s));
+        deck.AddCard(new StrikeCard(s));
+        deck.AddCard(new DefendCard(d));
+        deck.AddCard(new DefendCard(d));
+        deck.AddCard(new DefendCard(d));
+        deck.AddCard(new DefendCard(d));
+
+        deckEngine = new CombatEngine(
+                layout,
+                deck, player, enemy,
                 cardCount -> drawPileLabel.setText("" + cardCount),
                 cardCount -> discardPileLabel.setText("" + cardCount),
                 (count, base) -> energy.setText(count + "/" + base));
