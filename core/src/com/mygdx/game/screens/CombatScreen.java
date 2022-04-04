@@ -1,12 +1,12 @@
 package com.mygdx.game.screens;
 
-import classicthunder.combat.cards.Deck;
-import classicthunder.combat.cards.DefendCard;
-import classicthunder.combat.cards.StrikeCard;
-import classicthunder.combat.combat.CombatEngine;
-import classicthunder.combat.combat.character.CharacterEntity;
-import classicthunder.combat.combat.character.CharacterType;
-import classicthunder.combat.combat.layout.DeckLayout;
+import classicthunder.cards.Deck;
+import classicthunder.cards.DefendCard;
+import classicthunder.cards.StrikeCard;
+import classicthunder.combat.CombatEngine;
+import classicthunder.combat.character.CharacterActor;
+import classicthunder.combat.character.CharacterType;
+import classicthunder.combat.layout.DeckLayout;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -31,8 +31,8 @@ public class CombatScreen extends ManagedScreen {
 
     private CombatEngine deckEngine;
 
-    private CharacterEntity player;
-    private CharacterEntity enemy;
+    private CharacterActor player;
+    private CharacterActor enemy;
 
     private Label drawPileLabel;
     private Label discardPileLabel;
@@ -102,12 +102,12 @@ public class CombatScreen extends ManagedScreen {
         float centerX = worldWidth / 2f;
         float centerY = worldHeight / 2f;
 
-        player = new CharacterEntity(
+        player = new CharacterActor(
                 CharacterType.PLAYER,
                 content.GetTexture("PLAYER"),
                 new Vector2(centerX - 300, centerY - 150));
 
-        enemy = new CharacterEntity(
+        enemy = new CharacterActor(
                 CharacterType.ENEMY,
                 content.GetTexture("ENEMY"),
                 new Vector2(centerX + 300, centerY - 150));
