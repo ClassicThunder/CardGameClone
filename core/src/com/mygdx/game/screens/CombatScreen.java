@@ -124,7 +124,7 @@ public class CombatScreen extends ManagedScreen {
                 viewport, content, player, enemy,
                 cardCount -> drawPileLabel.setText("" + cardCount),
                 cardCount -> discardPileLabel.setText("" + cardCount),
-                energyCount -> energy.setText("" + energyCount));
+                (count, base) -> energy.setText(count + "/" + base));
     }
 
     @Override
@@ -138,13 +138,10 @@ public class CombatScreen extends ManagedScreen {
         batch.setProjectionMatrix(camera.combined);
         polygonBatch.setProjectionMatrix(camera.combined);
 
-
         deckEngine.Update();
 
         batch.begin();
         polygonBatch.begin();
-
-        batch.draw(content.GetDebugTexture(), 0, 0, 50, 50);
 
         drawPileLabel.Draw(batch);
         discardPileLabel.Draw(batch);

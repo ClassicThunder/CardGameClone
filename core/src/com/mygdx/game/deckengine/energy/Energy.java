@@ -28,12 +28,12 @@ public class Energy {
     public void ResetToBaseAmount() {
 
         energy = baseAmount;
-        energyFunction.onEnergyChanged(energy);
+        energyFunction.onEnergyChanged(energy, baseAmount);
     }
 
     public void AlterEnergy(int amount) {
 
         energy += amount;
-        energyFunction.onEnergyChanged(energy);
+        energyFunction.onEnergyChanged(energy, baseAmount);
     }
 }

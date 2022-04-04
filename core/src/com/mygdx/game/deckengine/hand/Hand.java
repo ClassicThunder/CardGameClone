@@ -102,13 +102,5 @@ public class Hand {
 
     public void Draw(SpriteBatch batch) {
 
-        int x = 0;
-        for (Card card : cardsInHand) {
-
-            content.GetDebugFont().draw(batch, "[" + x + "]",
-                    card.GetActualLocation().x,
-                    card.GetActualLocation().y + (card.GetActualSize().y / 2f) + 25f);
-            x++;
-        }
     }
 }
