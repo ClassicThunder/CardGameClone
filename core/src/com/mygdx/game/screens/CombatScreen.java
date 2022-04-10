@@ -1,12 +1,16 @@
 package com.mygdx.game.screens;
 
-import classicthunder.cards.Deck;
-import classicthunder.cards.DefendCard;
-import classicthunder.cards.StrikeCard;
+import classicthunder.combat.character.AICharacterActor;
+import classicthunder.components.card.Deck;
+import classicthunder.components.card.DefendCard;
+import classicthunder.components.card.StrikeCard;
 import classicthunder.combat.CombatEngine;
 import classicthunder.combat.character.CharacterActor;
-import classicthunder.combat.character.CharacterType;
+import classicthunder.components.character.Character;
+import classicthunder.components.character.CharacterStats;
+import classicthunder.components.character.CharacterType;
 import classicthunder.combat.layout.DeckLayout;
+import classicthunder.components.character.impl.StabbyBookCharacter;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -32,7 +36,7 @@ public class CombatScreen extends ManagedScreen {
     private CombatEngine deckEngine;
 
     private CharacterActor player;
-    private CharacterActor enemy;
+    private AICharacterActor enemy;
 
     private Label drawPileLabel;
     private Label discardPileLabel;
@@ -103,12 +107,12 @@ public class CombatScreen extends ManagedScreen {
         float centerY = worldHeight / 2f;
 
         player = new CharacterActor(
-                CharacterType.PLAYER,
+                new Character(new CharacterStats(CharacterType.PLAYER, 25, 0)),
                 content.GetTexture("PLAYER"),
                 new Vector2(centerX - 300, centerY - 150));
 
-        enemy = new CharacterActor(
-                CharacterType.ENEMY,
+        enemy = new AICharacterActor(
+                new StabbyBookCharacter(new CharacterStats(CharacterType.ENEMY, 50, 0)),
                 content.GetTexture("ENEMY"),
                 new Vector2(centerX + 300, centerY - 150));
     }
@@ -153,10 +157,13 @@ public class CombatScreen extends ManagedScreen {
     @Override
     public void render(float delta) {
 
+        player.update();
+        enemy.update();
+
         batch.setProjectionMatrix(camera.combined);
         polygonBatch.setProjectionMatrix(camera.combined);
 
-        deckEngine.Update();
+        deckEngine.update();
 
         batch.begin();
         polygonBatch.begin();
@@ -166,10 +173,10 @@ public class CombatScreen extends ManagedScreen {
         energy.Draw(batch);
         endTurn.Draw(batch);
 
-        player.Draw(batch);
-        enemy.Draw(batch);
+        player.draw(batch);
+        enemy.draw(batch);
 
-        deckEngine.Draw(batch, polygonBatch);
+        deckEngine.draw(batch, polygonBatch);
 
         batch.end();
         polygonBatch.end();
