@@ -7,9 +7,9 @@ import com.badlogic.gdx.math.Interpolation
 import kotlin.math.abs
 
 internal class Discarder(
-        private val discardCardPosition: Position,
-        private val discardFunction: (MutableList<CardActor>) -> Unit)
-{
+    private val discardCardPosition: Position,
+    private val discardFunction: (MutableList<CardActor>) -> Unit
+) {
 
     private val cardsBeingDiscarded: MutableList<CardActor?> = ArrayList()
 
@@ -21,9 +21,10 @@ internal class Discarder(
         for (card in cards) {
             card!!.reset()
             card.setRestingPosition(
-                    discardCardPosition.location,
-                    discardCardPosition.rotation,
-                    discardCardPosition.size)
+                discardCardPosition.location,
+                discardCardPosition.rotation,
+                discardCardPosition.size
+            )
         }
         cardsBeingDiscarded.addAll(cards)
     }
@@ -31,9 +32,10 @@ internal class Discarder(
     fun addCard(card: CardActor) {
         card.reset()
         card.setRestingPosition(
-                discardCardPosition.location,
-                discardCardPosition.rotation,
-                discardCardPosition.size)
+            discardCardPosition.location,
+            discardCardPosition.rotation,
+            discardCardPosition.size
+        )
         cardsBeingDiscarded.add(card)
     }
 

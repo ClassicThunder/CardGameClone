@@ -3,13 +3,13 @@ package com.mygdx.game.screens;
 import classicthunder.card.Deck;
 import classicthunder.card.DefendCard;
 import classicthunder.card.StrikeCard;
-import classicthunder.character.AINPC;
+import classicthunder.character.NonPlayableCharacter;
 import classicthunder.character.CharacterStats;
-import classicthunder.character.NPC;
+import classicthunder.character.PlayableCharacter;
 import classicthunder.combat.CombatEngine;
 import classicthunder.character.CharacterType;
 import classicthunder.combat.layout.DeckLayout;
-import classicthunder.character.impl.StabbyBookNPC;
+import classicthunder.character.impl.StabbyBookPlayableCharacter;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -34,8 +34,8 @@ public class CombatScreen extends ManagedScreen {
 
     private CombatEngine deckEngine;
 
-    private NPC player;
-    private AINPC enemy;
+    private PlayableCharacter player;
+    private NonPlayableCharacter enemy;
 
     private Label drawPileLabel;
     private Label discardPileLabel;
@@ -102,11 +102,11 @@ public class CombatScreen extends ManagedScreen {
 
     private void createCharacters() {
 
-        player = new NPC(
+        player = new PlayableCharacter(
                 content.GetTexture("PLAYER"),
                 new CharacterStats(CharacterType.PLAYER, 25, 0));
 
-        enemy = new StabbyBookNPC(
+        enemy = new StabbyBookPlayableCharacter(
                 content.GetTexture("ENEMY"),
                 new CharacterStats(CharacterType.ENEMY, 50, 0));
 

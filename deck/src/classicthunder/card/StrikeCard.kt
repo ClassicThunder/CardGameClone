@@ -4,8 +4,7 @@ import classicthunder.character.CharacterStats
 import classicthunder.character.CharacterType
 import com.badlogic.gdx.graphics.Texture
 
-class StrikeCard(texture: Texture) : Card(texture)
-{
+class StrikeCard(texture: Texture) : Card(texture) {
     override fun getEnergyCost(): Int {
         return 1
     }
@@ -15,6 +14,6 @@ class StrikeCard(texture: Texture) : Card(texture)
     }
 
     override fun applyEffects(stats: CharacterStats) {
-        stats.AdjustHealth(-6)
+        stats.dealDamage(6)
     }
 }

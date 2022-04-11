@@ -44,16 +44,20 @@ internal class CardBezier(area: Rectangle, private val cardSize: Vector2) {
     }
 
     private fun layoutCard(card: CardActor, pct: Float) {
-        val location = Bezier.quadratic(Vector2(), pct,
-                Vector2(paddedLeft, 0.0f),
-                Vector2(centerX, 100f),
-                Vector2(paddedRight, 0.0f),
-                Vector2())
-        val maxY = Bezier.quadratic(Vector2(), 0.5f,
-                Vector2(paddedLeft, 0.0f),
-                Vector2(centerX, 100f),
-                Vector2(paddedRight, 0.0f),
-                Vector2()).y
+        val location = Bezier.quadratic(
+            Vector2(), pct,
+            Vector2(paddedLeft, 0.0f),
+            Vector2(centerX, 100f),
+            Vector2(paddedRight, 0.0f),
+            Vector2()
+        )
+        val maxY = Bezier.quadratic(
+            Vector2(), 0.5f,
+            Vector2(paddedLeft, 0.0f),
+            Vector2(centerX, 100f),
+            Vector2(paddedRight, 0.0f),
+            Vector2()
+        ).y
         var rotation = (maxY - location.y) * .25f
         if (location.x > centerX) {
             rotation *= -1f

@@ -7,8 +7,8 @@ import classicthunder.combat.character.CharacterActor
 
 internal class EnemyTurnState(
     private val player: CharacterActor,
-    private val enemy: AICharacterActor) : State
-{
+    private val enemy: AICharacterActor
+) : State {
     private val actorEffect = FadeEffect(player, 10)
     private val wiggleEffect = WiggleEffect(enemy, 10)
 
@@ -28,10 +28,10 @@ internal class EnemyTurnState(
         if (actorEffect.isDone() && wiggleEffect.isDone()) {
 
             if (timer == 0) {
-                val damage = enemy.character.takeTurn()
-                player.character.characterStats.AdjustHealth(-damage)
+                val damage = enemy.character.getIntent()
+                player.character.characterStats.dealDamage(damage)
 
-                if (player.character.characterStats.GetHealth() <= 0) {
+                if (player.character.characterStats.getHealth() <= 0) {
                     return EngineState.Done
                 }
             }
@@ -44,5 +44,7 @@ internal class EnemyTurnState(
         } else EngineState.EnemyTurn
     }
 
-    override fun exit() {}
+    override fun exit() {
+        enemy.character.resetIntent()
+    }
 }

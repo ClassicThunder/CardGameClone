@@ -6,8 +6,8 @@ import com.badlogic.gdx.math.Vector2
 internal class Position(
     location: Vector2 = Vector2(),
     size: Vector2 = Vector2(),
-    rotation: Float = 0.0f)
-{
+    rotation: Float = 0.0f
+) {
     var location: Vector2 = location.cpy()
         private set
         get() = field.cpy()

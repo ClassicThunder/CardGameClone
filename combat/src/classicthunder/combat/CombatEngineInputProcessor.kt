@@ -11,13 +11,12 @@ import com.badlogic.gdx.math.Vector3
 internal class CombatEngineInputProcessor(
     private val deckEngine: CombatEngine,
     player: CharacterActor,
-    enemy: CharacterActor)
-{
+    enemy: CharacterActor
+) {
     val ip: InputProcessor
 
     init {
-        ip = object : InputProcessor
-        {
+        ip = object : InputProcessor {
             var grabbedCard: CardActor? = null
 
             override fun keyDown(keycode: Int): Boolean {
@@ -46,7 +45,7 @@ internal class CombatEngineInputProcessor(
                 }
 
                 val mouse = unproject(screenX, screenY)
-                grabbedCard = deckEngine.hand.GrabCard(mouse)
+                grabbedCard = deckEngine.hand.grabCard(mouse)
                 return true
             }
 
@@ -58,15 +57,17 @@ internal class CombatEngineInputProcessor(
                 val mouse = unproject(screenX, screenY)
                 if (grabbedCard != null) {
                     if (player.containsMouse(mouse) &&
-                            deckEngine.canPlayCard(player.character.characterStats, grabbedCard!!)) {
+                        deckEngine.canPlayCard(player.character.characterStats, grabbedCard!!)
+                    ) {
                         deckEngine.playCard(player.character.characterStats, grabbedCard!!)
                     }
                     if (enemy.containsMouse(mouse) &&
-                            deckEngine.canPlayCard(enemy.character.characterStats, grabbedCard!!)) {
+                        deckEngine.canPlayCard(enemy.character.characterStats, grabbedCard!!)
+                    ) {
                         deckEngine.playCard(enemy.character.characterStats, grabbedCard!!)
                     }
                 }
-                deckEngine.hand.ResetCards()
+                deckEngine.hand.resetCards()
                 return true
             }
 
@@ -74,7 +75,7 @@ internal class CombatEngineInputProcessor(
                 if (!isPlayerControl()) {
                     return true
                 }
-                
+
                 val mouse = unproject(screenX, screenY)
                 if (grabbedCard != null) {
                     grabbedCard!!.setDragPosition(mouse)
@@ -109,7 +110,7 @@ internal class CombatEngineInputProcessor(
     }
 
     private fun isPlayerControl(): Boolean {
-        return  deckEngine.state.currentState == EngineState.PlayerControl
+        return deckEngine.state.currentState == EngineState.PlayerControl
     }
 
     private fun unproject(x: Int, y: Int): Vector2 {

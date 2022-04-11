@@ -27,9 +27,11 @@ internal class CardActor(private val deckLayout: DeckLayout, private val card: C
 
     init {
         val textureRegion = TextureRegion(card.texture)
-        val verts = floatArrayOf(0f, 0f,
-                Hand.CARD_WIDTH, 0f,
-                Hand.CARD_WIDTH, Hand.CARD_HEIGHT, 0f, Hand.CARD_HEIGHT)
+        val verts = floatArrayOf(
+            0f, 0f,
+            Hand.CARD_WIDTH, 0f,
+            Hand.CARD_WIDTH, Hand.CARD_HEIGHT, 0f, Hand.CARD_HEIGHT
+        )
         val tris = shortArrayOf(0, 1, 2, 0, 2, 3)
         val polyRegion = PolygonRegion(textureRegion, verts, tris)
         polygon = PolygonSprite(polyRegion)
@@ -59,9 +61,10 @@ internal class CardActor(private val deckLayout: DeckLayout, private val card: C
     fun resetToDrawPosition() {
         reset()
         actualPosition.set(
-                deckLayout.drawPosition.location,
-                deckLayout.drawPosition.size,
-                deckLayout.drawPosition.rotation)
+            deckLayout.drawPosition.location,
+            deckLayout.drawPosition.size,
+            deckLayout.drawPosition.rotation
+        )
     }
 
     fun setGrabbed(isGrabbed: Boolean) {
@@ -124,8 +127,9 @@ internal class CardActor(private val deckLayout: DeckLayout, private val card: C
         polygon.setSize(size.x, size.y)
         polygon.rotation = rotation
         polygon.setPosition(
-                location.x - size.x / 2f,
-                location.y - size.y / 2f)
+            location.x - size.x / 2f,
+            location.y - size.y / 2f
+        )
     }
 
     fun draw(batch: PolygonSpriteBatch?, alpha: Float) {

@@ -4,8 +4,8 @@ import classicthunder.combat.character.CharacterActor
 
 internal abstract class ActorEffect(
     protected val characterActor: CharacterActor,
-    private val lengthInTicks: Int)
-{
+    private val lengthInTicks: Int
+) {
     private var ticks = 0
     private var isEnabled: Boolean = false
 

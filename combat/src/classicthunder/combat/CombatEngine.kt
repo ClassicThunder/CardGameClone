@@ -1,9 +1,9 @@
 package classicthunder.combat
 
 import classicthunder.card.Deck
-import classicthunder.character.AINPC
 import classicthunder.character.CharacterStats
-import classicthunder.character.NPC
+import classicthunder.character.NonPlayableCharacter
+import classicthunder.character.PlayableCharacter
 import classicthunder.combat.card.CardActor
 import classicthunder.combat.character.AICharacterActor
 import classicthunder.combat.character.CharacterActor
@@ -22,18 +22,24 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 
-class CombatEngine(val layout: DeckLayout,
-                   deck: Deck,
-                   player: NPC,
-                   enemy: AINPC,
-                   drawPileUpdate: PileFunction,
-                   discardPileUpdate: PileFunction,
-                   energyUpdate: EnergyFunction) {
+class CombatEngine(
+    val layout: DeckLayout,
+    deck: Deck,
+    player: PlayableCharacter,
+    enemy: NonPlayableCharacter,
+    drawPileUpdate: PileFunction,
+    discardPileUpdate: PileFunction,
+    energyUpdate: EnergyFunction
+) {
 
-    internal val playerActor = CharacterActor(player, player.texture,
-        Vector2(layout.centerWidth - 300, layout.centerHeight - 150))
-    internal val enemyActor = AICharacterActor(enemy, enemy.texture,
-        Vector2(layout.centerWidth + 300, layout.centerHeight - 150))
+    internal val playerActor = CharacterActor(
+        player, player.texture,
+        Vector2(layout.centerWidth - 300, layout.centerHeight - 150)
+    )
+    internal val enemyActor = AICharacterActor(
+        enemy, enemy.texture,
+        Vector2(layout.centerWidth + 300, layout.centerHeight - 150)
+    )
 
     internal val energy: Energy
     internal val hand: Hand
@@ -45,6 +51,7 @@ class CombatEngine(val layout: DeckLayout,
     // Input
     private val gameInputProcessor: CombatEngineInputProcessor =
         CombatEngineInputProcessor(this, playerActor, enemyActor)
+
     fun getGameInputProcessor(): InputProcessor {
         return gameInputProcessor.ip
     }
@@ -63,7 +70,7 @@ class CombatEngine(val layout: DeckLayout,
 
         hand = Hand(layout, 0.35f)
         for (i in 0..4) {
-            hand.AddCard(drawPile.drawTopCard())
+            hand.addCard(drawPile.drawTopCard())
         }
 
         energy = Energy(6, energyUpdate)
@@ -72,7 +79,8 @@ class CombatEngine(val layout: DeckLayout,
 
     internal fun canPlayCard(character: CharacterStats, card: CardActor): Boolean {
         return if (state.currentState == EngineState.PlayerControl &&
-            energy.getEnergy() >= card.getEnergyCost()) {
+            energy.getEnergy() >= card.getEnergyCost()
+        ) {
             card.canApplyEffects(character)
         } else false
     }
@@ -85,9 +93,9 @@ class CombatEngine(val layout: DeckLayout,
 
         energy.alterEnergy(-card.getEnergyCost())
         card.applyEffects(character)
-        hand.DiscardCard(discarder, card)
+        hand.discardCard(discarder, card)
 
-        if (enemyActor.character.characterStats.GetHealth() <= 0) {
+        if (enemyActor.character.characterStats.getHealth() <= 0) {
             state.forceState(EngineState.Done)
         }
     }
@@ -110,8 +118,8 @@ class CombatEngine(val layout: DeckLayout,
         playerActor.draw(batch)
         enemyActor.draw(batch)
 
-        hand.Draw(batch)
-        hand.Draw(polygonBatch)
+        hand.draw(batch)
+        hand.draw(polygonBatch)
         discarder.draw(polygonBatch)
     }
 }

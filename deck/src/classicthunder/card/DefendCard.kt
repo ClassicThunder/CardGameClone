@@ -4,8 +4,7 @@ import classicthunder.character.CharacterStats
 import classicthunder.character.CharacterType
 import com.badlogic.gdx.graphics.Texture
 
-class DefendCard(texture: Texture) : Card(texture)
-{
+class DefendCard(texture: Texture) : Card(texture) {
     override fun getEnergyCost(): Int {
         return 1
     }
@@ -15,6 +14,6 @@ class DefendCard(texture: Texture) : Card(texture)
     }
 
     override fun applyEffects(stats: CharacterStats) {
-        stats.AdjustBlock(5)
+        stats.adjustBlock(5)
     }
 }

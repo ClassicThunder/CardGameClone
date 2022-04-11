@@ -5,11 +5,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 
-internal abstract class SpriteActor(texture: Texture,
-                           internal val location: Vector2 = Vector2(),
-                           internal val origin: Vector2 = Vector2(),
-                           internal val size: Vector2 = Vector2(),
-                           internal val sprite: Sprite = Sprite(texture)
+internal abstract class SpriteActor(
+    texture: Texture,
+    internal val location: Vector2 = Vector2(),
+    internal val origin: Vector2 = Vector2(),
+    internal val size: Vector2 = Vector2(),
+    internal val sprite: Sprite = Sprite(texture)
 ) {
     internal var offsetX = 0.0f
     internal var offsetY = 0.0f
@@ -33,7 +34,8 @@ internal abstract class SpriteActor(texture: Texture,
         sprite.setAlpha(alpha)
         sprite.setOriginBasedPosition(
             location.x + offsetX,
-            location.y + offsetY)
+            location.y + offsetY
+        )
     }
 
     open fun draw(batch: SpriteBatch) {
