@@ -8,7 +8,7 @@ import com.badlogic.gdx.InputProcessor
 import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.math.Vector3
 
-class CombatEngineInputProcessor(
+internal class CombatEngineInputProcessor(
     private val deckEngine: CombatEngine,
     player: CharacterActor,
     enemy: CharacterActor)
@@ -77,22 +77,22 @@ class CombatEngineInputProcessor(
                 
                 val mouse = unproject(screenX, screenY)
                 if (grabbedCard != null) {
-                    grabbedCard!!.SetDragPosition(mouse)
+                    grabbedCard!!.setDragPosition(mouse)
                     if (player.containsMouse(mouse)) {
                         if (deckEngine.canPlayCard(player.character.characterStats, grabbedCard!!)) {
-                            grabbedCard!!.SetIsPlayable(true)
+                            grabbedCard!!.setIsPlayable(true)
                         } else {
-                            grabbedCard!!.SetIsNotPlayable(true)
+                            grabbedCard!!.setIsNotPlayable(true)
                         }
                     } else if (enemy.containsMouse(mouse)) {
                         if (deckEngine.canPlayCard(enemy.character.characterStats, grabbedCard!!)) {
-                            grabbedCard!!.SetIsPlayable(true)
+                            grabbedCard!!.setIsPlayable(true)
                         } else {
-                            grabbedCard!!.SetIsNotPlayable(true)
+                            grabbedCard!!.setIsNotPlayable(true)
                         }
                     } else {
-                        grabbedCard!!.SetIsPlayable(false)
-                        grabbedCard!!.SetIsNotPlayable(false)
+                        grabbedCard!!.setIsPlayable(false)
+                        grabbedCard!!.setIsNotPlayable(false)
                     }
                 }
                 return true

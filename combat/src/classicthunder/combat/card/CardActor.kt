@@ -1,9 +1,9 @@
 package classicthunder.combat.card
 
+import classicthunder.card.Card
+import classicthunder.character.CharacterStats
 import classicthunder.combat.hand.Hand
 import classicthunder.combat.layout.DeckLayout
-import classicthunder.components.card.Card
-import classicthunder.components.character.CharacterStats
 import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.g2d.PolygonRegion
 import com.badlogic.gdx.graphics.g2d.PolygonSprite
@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.math.Vector2
 
-class CardActor(private val deckLayout: DeckLayout, private val card: Card) {
+internal class CardActor(private val deckLayout: DeckLayout, private val card: Card) {
 
     private val polygon: PolygonSprite
 
@@ -33,50 +33,50 @@ class CardActor(private val deckLayout: DeckLayout, private val card: Card) {
         val tris = shortArrayOf(0, 1, 2, 0, 2, 3)
         val polyRegion = PolygonRegion(textureRegion, verts, tris)
         polygon = PolygonSprite(polyRegion)
-        ResetToDrawPosition()
+        resetToDrawPosition()
     }
 
     // ##### Effects ##### //
-    fun GetEnergyCost(): Int {
-        return card.energyCost
+    fun getEnergyCost(): Int {
+        return card.getEnergyCost()
     }
 
-    fun CanApplyEffects(stats: CharacterStats?): Boolean {
-        return card.CanApplyEffects(stats!!)
+    fun canApplyEffects(stats: CharacterStats): Boolean {
+        return card.canApplyEffects(stats)
     }
 
-    fun ApplyEffects(stats: CharacterStats?) {
-        card.ApplyEffects(stats!!)
+    fun applyEffects(stats: CharacterStats?) {
+        card.applyEffects(stats!!)
     }
 
     // ##### Input ##### //
-    fun Reset() {
+    fun reset() {
         isGrabbed = false
         isPlayable = false
         isNotPlayable = false
     }
 
-    fun ResetToDrawPosition() {
-        Reset()
+    fun resetToDrawPosition() {
+        reset()
         actualPosition.set(
                 deckLayout.drawPosition.location,
                 deckLayout.drawPosition.size,
                 deckLayout.drawPosition.rotation)
     }
 
-    fun SetGrabbed(isGrabbed: Boolean) {
+    fun setGrabbed(isGrabbed: Boolean) {
         this.isGrabbed = isGrabbed
     }
 
-    fun SetIsPlayable(isPlayable: Boolean) {
+    fun setIsPlayable(isPlayable: Boolean) {
         this.isPlayable = isPlayable
     }
 
-    fun SetIsNotPlayable(isNotPlayable: Boolean) {
+    fun setIsNotPlayable(isNotPlayable: Boolean) {
         this.isNotPlayable = isNotPlayable
     }
 
-    fun ContainsMouse(mouseLocation: Vector2): Boolean {
+    fun containsMouse(mouseLocation: Vector2): Boolean {
         val vertices = polygon.vertices
         var lastX = vertices[vertices.size - 5]
         var lastY = vertices[vertices.size - 4]
@@ -98,20 +98,20 @@ class CardActor(private val deckLayout: DeckLayout, private val card: Card) {
     }
 
     // ##### Layout ##### //
-    fun GetActualLocation(): Vector2? {
+    fun getActualLocation(): Vector2 {
         return actualPosition.location
     }
 
-    fun SetRestingPosition(location: Vector2?, rotation: Float, size: Vector2?) {
+    fun setRestingPosition(location: Vector2, rotation: Float, size: Vector2) {
         restingPosition.set(location, size, rotation)
     }
 
-    fun SetDragPosition(location: Vector2?) {
+    fun setDragPosition(location: Vector2) {
         dragPosition.set(location, restingPosition.size, 0.0f)
     }
 
     // ##### Life Cycle ##### //
-    fun Update() {
+    fun update() {
         if (isGrabbed) {
             actualPosition.lerpTowards(dragPosition, 0.35f)
         } else {
@@ -120,15 +120,15 @@ class CardActor(private val deckLayout: DeckLayout, private val card: Card) {
         val location = actualPosition.location
         val size = actualPosition.size
         val rotation = actualPosition.rotation
-        polygon.setOrigin(size!!.x / 2f, size.y / 2f)
+        polygon.setOrigin(size.x / 2f, size.y / 2f)
         polygon.setSize(size.x, size.y)
         polygon.rotation = rotation
         polygon.setPosition(
-                location!!.x - size.x / 2f,
+                location.x - size.x / 2f,
                 location.y - size.y / 2f)
     }
 
-    fun Draw(batch: PolygonSpriteBatch?, alpha: Float) {
+    fun draw(batch: PolygonSpriteBatch?, alpha: Float) {
         if (isPlayable) {
             polygon.color = Color.GREEN
         } else if (isNotPlayable) {

@@ -5,20 +5,15 @@ import com.badlogic.gdx.math.Bezier
 import com.badlogic.gdx.math.Rectangle
 import com.badlogic.gdx.math.Vector2
 
-class CardBezier(area: Rectangle, private val cardSize: Vector2) {
-    private val centerX: Float
-    private val paddedLeft: Float
-    private val paddedRight: Float
+internal class CardBezier(area: Rectangle, private val cardSize: Vector2) {
 
-    init {
-        centerX = area.x + area.width / 2
-        val width = area.width - cardSize.x
-        paddedLeft = centerX - width / 2f
-        paddedRight = centerX + width / 2f
-    }
+    private val centerX = area.x + area.width / 2
+    private val width = area.width - cardSize.x
+    private val paddedLeft = centerX - width / 2f
+    private val paddedRight = centerX + width / 2f
 
-    fun FindRestingPosition(cardsInHand: List<CardActor?>) {
-        if (cardsInHand.size == 0) {
+    fun findRestingPosition(cardsInHand: List<CardActor>) {
+        if (cardsInHand.isEmpty()) {
             return
         }
 
@@ -48,7 +43,7 @@ class CardBezier(area: Rectangle, private val cardSize: Vector2) {
         }
     }
 
-    private fun layoutCard(card: CardActor?, pct: Float) {
+    private fun layoutCard(card: CardActor, pct: Float) {
         val location = Bezier.quadratic(Vector2(), pct,
                 Vector2(paddedLeft, 0.0f),
                 Vector2(centerX, 100f),
@@ -63,6 +58,6 @@ class CardBezier(area: Rectangle, private val cardSize: Vector2) {
         if (location.x > centerX) {
             rotation *= -1f
         }
-        card!!.SetRestingPosition(location, rotation, cardSize)
+        card.setRestingPosition(location, rotation, cardSize)
     }
 }

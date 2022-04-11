@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 
-abstract class SpriteActor(texture: Texture,
+internal abstract class SpriteActor(texture: Texture,
                            internal val location: Vector2 = Vector2(),
                            internal val origin: Vector2 = Vector2(),
                            internal val size: Vector2 = Vector2(),

@@ -1,14 +1,14 @@
 package classicthunder.combat.character
 
 import classicthunder.actor.SpriteActor
-import classicthunder.components.character.Character
+import classicthunder.character.NPC
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.math.Vector2
 
-open class CharacterActor(
-    internal open val character: Character,
+internal open class CharacterActor(
+    internal open val character: NPC,
     texture: Texture,
     location: Vector2
 ) : SpriteActor(

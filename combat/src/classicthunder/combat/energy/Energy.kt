@@ -1,6 +1,6 @@
 package classicthunder.combat.energy
 
-class Energy(private val baseAmount: Int, energyFunction: EnergyFunction)
+internal class Energy(private val baseAmount: Int, energyFunction: EnergyFunction)
 {
     private var energy: Int
     private val energyFunction: EnergyFunction

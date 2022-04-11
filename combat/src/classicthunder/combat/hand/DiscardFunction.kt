@@ -1,7 +1,7 @@
 package classicthunder.combat.hand
 
-import classicthunder.combat.card.CardActor
+import classicthunder.card.Card
 
 interface DiscardFunction {
-    fun onDiscard(cards: List<CardActor?>)
+    fun onDiscard(cards: List<Card>)
 }

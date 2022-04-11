@@ -15,6 +15,6 @@ class DeckLayout(var viewport: Viewport, drawLocation: Vector2, discardLocation:
     private val edgeBuffer = 200f
     val handWidth = worldWidth - 2 * edgeBuffer
 
-    val drawPosition: Position = Position(drawLocation, Vector2(100f, 150f), 0f)
-    val discardPosition: Position = Position(discardLocation, Vector2(100f, 150f), 0f)
+    internal val drawPosition: Position = Position(drawLocation, Vector2(100f, 150f), 0f)
+    internal val discardPosition: Position = Position(discardLocation, Vector2(100f, 150f), 0f)
 }

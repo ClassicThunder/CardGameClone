@@ -2,14 +2,15 @@ package classicthunder.actor
 
 import classicthunder.combat.character.CharacterActor
 
-abstract class ActorEffect(protected val characterActor: CharacterActor,
-                           private val lengthInTicks: Int)
+internal abstract class ActorEffect(
+    protected val characterActor: CharacterActor,
+    private val lengthInTicks: Int)
 {
     private var ticks = 0
     private var isEnabled: Boolean = false
 
     /**
-     * If the actor is not currently running then it starts at the beggnining
+     * If the actor is not currently running then it starts at the beginning
      * of the animation.
      */
     fun start() {

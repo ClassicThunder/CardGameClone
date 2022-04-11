@@ -1,5 +1,5 @@
 package classicthunder.combat.state
 
-enum class EngineState {
+internal enum class EngineState {
     PlayerControl, Drawing, Discarding, EnemyTurn, Done
 }

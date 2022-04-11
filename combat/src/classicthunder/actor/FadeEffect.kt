@@ -2,7 +2,7 @@ package classicthunder.actor
 
 import classicthunder.combat.character.CharacterActor
 
-class FadeEffect(a: CharacterActor, i: Int) : ActorEffect(a, i) {
+internal class FadeEffect(a: CharacterActor, i: Int) : ActorEffect(a, i) {
 
     override fun update(progress: Float) {
 

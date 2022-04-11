@@ -5,7 +5,7 @@ import classicthunder.actor.WiggleEffect
 import classicthunder.combat.character.AICharacterActor
 import classicthunder.combat.character.CharacterActor
 
-class EnemyTurnState(
+internal class EnemyTurnState(
     private val player: CharacterActor,
     private val enemy: AICharacterActor) : State
 {

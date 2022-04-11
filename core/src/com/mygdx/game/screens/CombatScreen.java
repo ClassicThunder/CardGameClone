@@ -1,16 +1,15 @@
 package com.mygdx.game.screens;
 
-import classicthunder.combat.character.AICharacterActor;
-import classicthunder.components.card.Deck;
-import classicthunder.components.card.DefendCard;
-import classicthunder.components.card.StrikeCard;
+import classicthunder.card.Deck;
+import classicthunder.card.DefendCard;
+import classicthunder.card.StrikeCard;
+import classicthunder.character.AINPC;
+import classicthunder.character.CharacterStats;
+import classicthunder.character.NPC;
 import classicthunder.combat.CombatEngine;
-import classicthunder.combat.character.CharacterActor;
-import classicthunder.components.character.Character;
-import classicthunder.components.character.CharacterStats;
-import classicthunder.components.character.CharacterType;
+import classicthunder.character.CharacterType;
 import classicthunder.combat.layout.DeckLayout;
-import classicthunder.components.character.impl.StabbyBookCharacter;
+import classicthunder.character.impl.StabbyBookNPC;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -35,8 +34,8 @@ public class CombatScreen extends ManagedScreen {
 
     private CombatEngine deckEngine;
 
-    private CharacterActor player;
-    private AICharacterActor enemy;
+    private NPC player;
+    private AINPC enemy;
 
     private Label drawPileLabel;
     private Label discardPileLabel;
@@ -103,18 +102,14 @@ public class CombatScreen extends ManagedScreen {
 
     private void createCharacters() {
 
-        float centerX = worldWidth / 2f;
-        float centerY = worldHeight / 2f;
-
-        player = new CharacterActor(
-                new Character(new CharacterStats(CharacterType.PLAYER, 25, 0)),
+        player = new NPC(
                 content.GetTexture("PLAYER"),
-                new Vector2(centerX - 300, centerY - 150));
+                new CharacterStats(CharacterType.PLAYER, 25, 0));
 
-        enemy = new AICharacterActor(
-                new StabbyBookCharacter(new CharacterStats(CharacterType.ENEMY, 50, 0)),
+        enemy = new StabbyBookNPC(
                 content.GetTexture("ENEMY"),
-                new Vector2(centerX + 300, centerY - 150));
+                new CharacterStats(CharacterType.ENEMY, 50, 0));
+
     }
 
     private void createDeckEngine() {
@@ -157,9 +152,6 @@ public class CombatScreen extends ManagedScreen {
     @Override
     public void render(float delta) {
 
-        player.update();
-        enemy.update();
-
         batch.setProjectionMatrix(camera.combined);
         polygonBatch.setProjectionMatrix(camera.combined);
 
@@ -172,9 +164,6 @@ public class CombatScreen extends ManagedScreen {
         discardPileLabel.Draw(batch);
         energy.Draw(batch);
         endTurn.Draw(batch);
-
-        player.draw(batch);
-        enemy.draw(batch);
 
         deckEngine.draw(batch, polygonBatch);
 

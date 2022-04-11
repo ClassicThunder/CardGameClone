@@ -4,46 +4,44 @@ import classicthunder.combat.card.CardActor
 import classicthunder.combat.card.Position
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.math.Interpolation
+import kotlin.math.abs
 
-class Discarder(
-        private val discardCardPosition: Position?,
-        private val discardFunction: (MutableList<CardActor?>) -> Unit) {
+internal class Discarder(
+        private val discardCardPosition: Position,
+        private val discardFunction: (MutableList<CardActor>) -> Unit)
+{
 
     private val cardsBeingDiscarded: MutableList<CardActor?> = ArrayList()
 
-    fun GetCardCount(): Int {
+    fun getCardCount(): Int {
         return cardsBeingDiscarded.size
     }
 
-    fun ClearCards() {
-        cardsBeingDiscarded.clear()
-    }
-
-    fun AddCards(cards: List<CardActor?>) {
+    fun addCards(cards: List<CardActor?>) {
         for (card in cards) {
-            card!!.Reset()
-            card.SetRestingPosition(
-                    discardCardPosition!!.location,
+            card!!.reset()
+            card.setRestingPosition(
+                    discardCardPosition.location,
                     discardCardPosition.rotation,
                     discardCardPosition.size)
         }
         cardsBeingDiscarded.addAll(cards)
     }
 
-    fun AddCard(card: CardActor) {
-        card.Reset()
-        card.SetRestingPosition(
-                discardCardPosition!!.location,
+    fun addCard(card: CardActor) {
+        card.reset()
+        card.setRestingPosition(
+                discardCardPosition.location,
                 discardCardPosition.rotation,
                 discardCardPosition.size)
         cardsBeingDiscarded.add(card)
     }
 
-    fun Update() {
-        val settledCards: MutableList<CardActor?> = ArrayList()
+    fun update() {
+        val settledCards: MutableList<CardActor> = ArrayList()
         for (card in cardsBeingDiscarded) {
-            card!!.Update()
-            if (card.GetActualLocation()!!.dst(discardCardPosition!!.location) < 10.0f) {
+            card!!.update()
+            if (card.getActualLocation().dst(discardCardPosition.location) < 10.0f) {
                 settledCards.add(card)
             }
         }
@@ -53,17 +51,16 @@ class Discarder(
         }
     }
 
-    fun Draw(batch: PolygonSpriteBatch?) {
+    fun draw(batch: PolygonSpriteBatch?) {
         for (card in cardsBeingDiscarded) {
-            var alpha: Float
-            val location = card!!.GetActualLocation()
-            val dst = Math.abs(location!!.dst(discardCardPosition!!.location))
-            alpha = if (dst < 100) {
+            val location = card!!.getActualLocation()
+            val dst = abs(location.dst(discardCardPosition.location))
+            val alpha = if (dst < 100) {
                 Interpolation.slowFast.apply(dst / 100.0f)
             } else {
                 1.0f
             }
-            card.Draw(batch, alpha)
+            card.draw(batch, alpha)
         }
     }
 }

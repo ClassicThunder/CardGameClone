@@ -2,7 +2,7 @@ package classicthunder.actor
 
 import classicthunder.combat.character.CharacterActor
 
-class WiggleEffect(a: CharacterActor, i: Int) : ActorEffect(a, i) {
+internal class WiggleEffect(a: CharacterActor, i: Int) : ActorEffect(a, i) {
 
     override fun update(progress: Float) {
 

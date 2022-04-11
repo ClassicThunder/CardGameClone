@@ -11,6 +11,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
+    api project(":deck")
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 compileKotlin {

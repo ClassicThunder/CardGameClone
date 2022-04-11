@@ -1,10 +1,11 @@
 package classicthunder.combat.character
 
-import classicthunder.components.character.AICharacter
+import classicthunder.character.AINPC
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.math.Vector2
 
-class AICharacterActor(
-    override val character: AICharacter,
+internal class AICharacterActor(
+    override val character: AINPC,
     texture: Texture,
-    location: Vector2) : CharacterActor(character, texture, location)
+    location: Vector2
+) : CharacterActor(character, texture, location)
