@@ -1,5 +1,4 @@
 buildscript {
-    
 
     repositories {
         mavenLocal()
@@ -8,10 +7,8 @@ buildscript {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         google()
     }
-    dependencies {
-        
 
-    }
+    dependencies { }
 }
 
 allprojects {
@@ -45,11 +42,11 @@ project(":desktop") {
 
 
     dependencies {
-        implementation project(":core")
+        project(":core")
 
-        api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        api "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
     }
 }
 
@@ -58,11 +55,12 @@ project(":core") {
 
 
     dependencies {
-        api project(":combat")
-        api project(":deck")
-        api "com.badlogicgames.gdx:gdx:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-        api "com.github.crykn:libgdx-screenmanager:$screenmanagerVersion"
+        project(":combat")
+        project(":deck")
+        project(":common")
+        "com.badlogicgames.gdx:gdx:$gdxVersion"
+        "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        "com.github.crykn:libgdx-screenmanager:$screenmanagerVersion"
     }
 }
 
@@ -71,9 +69,9 @@ project(":combat") {
 
 
     dependencies {
-        api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        api "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
     }
 }
 
@@ -82,8 +80,8 @@ project(":deck") {
 
 
     dependencies {
-        api "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        api "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
     }
 }

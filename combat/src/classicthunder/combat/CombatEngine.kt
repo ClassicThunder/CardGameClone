@@ -58,7 +58,7 @@ class CombatEngine(
 
     init {
         drawPile = DrawPile(drawPileUpdate)
-        drawPile.setPile(deck.GetCards().map { CardActor(layout, it) })
+        drawPile.setPile(deck.getCards().map { CardActor(layout, it) })
 
         discardPile = DiscardPile(discardPileUpdate)
         discarder = Discarder(layout.discardPosition) { cards ->

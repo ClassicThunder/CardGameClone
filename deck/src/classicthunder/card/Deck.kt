@@ -1,26 +1,67 @@
 package classicthunder.card
 
-class Deck {
+import java.util.*
 
-    private val cards: MutableList<Card>
+class Deck(private var drawPile: List<Card>) {
 
-    constructor() {
-        cards = ArrayList()
+    private var hand: List<Card>
+    private var discardPile: List<Card>
+    private val destroyedPile: List<Card>
+
+    private val handSize: Int = 5
+
+    init {
+        hand = LinkedList()
+        discardPile = LinkedList()
+        destroyedPile = LinkedList()
     }
 
-    constructor(cards: MutableList<Card>) {
-        this.cards = cards
+    fun addCard(card: Card) {
+        drawPile += card
     }
 
-    fun AddCard(card: Card) {
-        cards.add(card)
+    fun getDrawPile(): Iterable<Card> {
+        return this.drawPile.asIterable()
     }
 
-    fun AddCards(cards: List<Card>?) {
-        this.cards.addAll(cards!!)
+    fun getHand(): Iterable<Card> {
+        return this.hand.asIterable()
     }
 
-    fun GetCards(): List<Card> {
-        return cards
+    fun getDiscardPile(): Iterable<Card> {
+        return this.discardPile.asIterable()
+    }
+
+    fun getDestroyedPile(): Iterable<Card> {
+        return this.destroyedPile.asIterable()
+    }
+
+    fun shuffle() {
+        drawPile += discardPile
+        discardPile = LinkedList()
+        drawPile = drawPile.shuffled()
+    }
+
+    fun draw() {
+        val overDraw = handSize - drawPile.size
+        hand = drawPile.take(handSize)
+        drawPile = drawPile.drop(handSize)
+        if (overDraw > 0) {
+            shuffle()
+            hand += drawPile.take(overDraw)
+            drawPile = drawPile.drop(overDraw)
+        }
+    }
+
+    fun discard() {
+        discardPile += hand
+        hand = LinkedList()
+    }
+
+    fun combatClone(): Deck {
+        val deckClone = this.drawPile.map{
+            it.copy(it)
+        }.toMutableList()
+        return Deck(deckClone)
     }
 }

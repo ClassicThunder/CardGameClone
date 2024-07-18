@@ -1,8 +1,8 @@
 package com.mygdx.game.screens;
 
 import classicthunder.card.Deck;
-import classicthunder.card.DefendCard;
-import classicthunder.card.StrikeCard;
+import classicthunder.card.impl.DefendCard;
+import classicthunder.card.impl.StrikeCard;
 import classicthunder.character.NonPlayableCharacter;
 import classicthunder.character.CharacterStats;
 import classicthunder.character.PlayableCharacter;
@@ -125,16 +125,16 @@ public class CombatScreen extends ManagedScreen {
         Texture d = content.GetTexture("CARD_DEFEND");
 
         Deck deck = new Deck();
-        deck.AddCard(new StrikeCard(s));
-        deck.AddCard(new StrikeCard(s));
-        deck.AddCard(new StrikeCard(s));
-        deck.AddCard(new StrikeCard(s));
-        deck.AddCard(new StrikeCard(s));
-        deck.AddCard(new StrikeCard(s));
-        deck.AddCard(new DefendCard(d));
-        deck.AddCard(new DefendCard(d));
-        deck.AddCard(new DefendCard(d));
-        deck.AddCard(new DefendCard(d));
+        deck.addCard(new StrikeCard(s));
+        deck.addCard(new StrikeCard(s));
+        deck.addCard(new StrikeCard(s));
+        deck.addCard(new StrikeCard(s));
+        deck.addCard(new StrikeCard(s));
+        deck.addCard(new StrikeCard(s));
+        deck.addCard(new DefendCard(d));
+        deck.addCard(new DefendCard(d));
+        deck.addCard(new DefendCard(d));
+        deck.addCard(new DefendCard(d));
 
         deckEngine = new CombatEngine(
                 layout,

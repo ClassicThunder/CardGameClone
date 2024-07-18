@@ -1,2 +1,2 @@
-include 'desktop', 'core', 'combat', "deck"
+include 'desktop', 'core', 'combat', "deck", 'common'
 

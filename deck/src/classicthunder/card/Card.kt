@@ -1,12 +1,12 @@
 package classicthunder.card
 
 import classicthunder.character.CharacterStats
-import com.badlogic.gdx.graphics.Texture
 
-abstract class Card(
-    val texture: Texture
-) {
+abstract class Card(parent: Card?) {
+
     abstract fun getEnergyCost(): Int
-    abstract fun canApplyEffects(stats: CharacterStats): Boolean
-    abstract fun applyEffects(stats: CharacterStats)
+    abstract fun canPlay(stats: CharacterStats): Boolean
+    abstract fun play(stats: CharacterStats)
+
+    abstract fun copy(parent: Card): Card
 }

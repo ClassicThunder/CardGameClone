@@ -44,11 +44,11 @@ internal class CardActor(private val deckLayout: DeckLayout, private val card: C
     }
 
     fun canApplyEffects(stats: CharacterStats): Boolean {
-        return card.canApplyEffects(stats)
+        return card.canPlay(stats)
     }
 
     fun applyEffects(stats: CharacterStats?) {
-        card.applyEffects(stats!!)
+        card.play(stats!!)
     }
 
     // ##### Input ##### //
