@@ -45,8 +45,7 @@ public class CombatScreen extends ManagedScreen {
     final private int worldWidth = 1600;
     final private int worldHeight = 900;
 
-    @Override
-    protected void create() {
+    public CombatScreen() {
 
         camera = new OrthographicCamera(worldWidth, worldHeight);
         camera.translate(worldWidth / 2f, worldHeight / 2f, 0);

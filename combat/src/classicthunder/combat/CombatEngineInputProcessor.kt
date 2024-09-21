@@ -71,6 +71,10 @@ internal class CombatEngineInputProcessor(
                 return true
             }
 
+            override fun touchCancelled(p0: Int, p1: Int, p2: Int, p3: Int): Boolean {
+                return false;
+            }
+
             override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
                 if (!isPlayerControl()) {
                     return true

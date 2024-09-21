@@ -15,13 +15,8 @@ public class Game extends ManagedGame<ManagedScreen, ScreenTransition> {
         super.create();
         SpriteBatch batch = new SpriteBatch();
 
-        this.screenManager.addScreen("combat", new CombatScreen());
-//        this.screenManager.addScreen("test", new TestScreen());
-
-        BlendingTransition blendingTransition = new BlendingTransition(batch, 1F, Interpolation.pow2In);
-        screenManager.addScreenTransition("blending_transition", blendingTransition);
-
-        this.screenManager.pushScreen("combat", null);
-//        this.screenManager.pushScreen("test", null);
+        this.screenManager.pushScreen(
+                new CombatScreen(),
+                new BlendingTransition(batch, 1F, Interpolation.pow2In));
     }
 }

@@ -8,6 +8,7 @@ import classicthunder.character.CharacterType
 import classicthunder.character.PlayableCharacter
 import classicthunder.character.impl.StabbyBookPlayableCharacter
 import classicthunder.combat.CombatInstance
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -16,7 +17,7 @@ class CombatTest {
     @Test
     fun combatTest() {
 
-        val deck = Deck(mutableListOf(
+        val deck = Deck(listOf(
             StrikeCard(null),
             StrikeCard(null),
             StrikeCard(null),
@@ -32,13 +33,17 @@ class CombatTest {
         val player = PlayableCharacter(CharacterStats(CharacterType.PLAYER, 100))
         val enemy = StabbyBookPlayableCharacter(CharacterStats(CharacterType.ENEMY, 100))
 
-        val combat = CombatInstance(deck, player , enemy)
+        val combat = CombatInstance(deck, player, enemy, 3)
 
-        combat.combatDeck.addCard(StrikeCard(null))
+        combat.start()
+        val strikeCard = combat.deck.getHand().first { card -> card is StrikeCard }
 
-        // The combat copy shouldn't affect the base deck
-        assertEquals(10, deck.getDrawPile().count())
+        val startingHealth = enemy.characterStats.getHealth()
 
+        combat.canPlayCard(strikeCard, enemy.characterStats)
+        combat.playCard(strikeCard, enemy.characterStats)
 
+        Assertions.assertEquals(6, startingHealth - enemy.characterStats.getHealth())
+        Assertions.assertEquals(2, combat.currentEnergy)
     }
 }
