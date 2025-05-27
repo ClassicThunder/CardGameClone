@@ -53,7 +53,14 @@ class Deck(private var drawPile: List<Card>) {
         }
     }
 
-    fun discard() {
+    fun discardCard(card: Card) {
+        if (hand.contains(card)) {
+            hand -= card
+            drawPile += card
+        }
+    }
+
+    fun discardHand() {
         discardPile += hand
         hand = LinkedList()
     }

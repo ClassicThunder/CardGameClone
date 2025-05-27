@@ -15,7 +15,6 @@ class CombatInstance(
     private val player: PlayableCharacter,
     private val enemy: NonPlayableCharacter,
     private var resetEnergy: Int
-
 ) {
     val deck: Deck = deck.combatClone()
 
@@ -33,9 +32,11 @@ class CombatInstance(
         currentEnergy = resetEnergy
     }
 
+    // ############# Player ############# //
+
     fun canPlayCard(card: Card, target: CharacterStats): Boolean {
 
-        if (card.getEnergyCost() <= currentEnergy) {
+        if (card.getEnergyCost() <= currentEnergy && deck.getHand().contains(card)) {
             return card.canPlay(target)
         }
 
@@ -46,9 +47,14 @@ class CombatInstance(
 
         if (canPlayCard(card, target)) {
             card.play(target)
+            deck.discardCard(card)
+            currentEnergy -= card.getEnergyCost()
         }
-
-        currentEnergy -= card.getEnergyCost()
     }
 
+    // ############# Enemy ############# //
+
+    fun applyIntent() {
+        enemy.getIntent();
+    }
 }

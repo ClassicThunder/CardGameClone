@@ -39,7 +39,7 @@ class DeckTest {
         assertEquals(0, deck.getDiscardPile().count())
         assertEquals(0, deck.getDestroyedPile().count())
 
-        deck.discard()
+        deck.discardHand()
 
         assertEquals(5, deck.getDrawPile().count())
         assertEquals(0, deck.getHand().count())
@@ -53,7 +53,7 @@ class DeckTest {
         assertEquals(5, deck.getDiscardPile().count())
         assertEquals(0, deck.getDestroyedPile().count())
 
-        deck.discard()
+        deck.discardHand()
 
         assertEquals(0, deck.getDrawPile().count())
         assertEquals(0, deck.getHand().count())
